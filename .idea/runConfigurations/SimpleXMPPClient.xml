@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="SimpleXMPPClient" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="team.elrant.bubbles.xmpp.SimpleXMPPClient" />
+    <module name="bubbles" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
