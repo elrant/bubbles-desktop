@@ -5,7 +5,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import team.elrant.bubbles.xmpp.ConnectedUser;
 
-public class HelloController {
+public class LoginController {
     @FXML
     private TextField username_field;
     @FXML
