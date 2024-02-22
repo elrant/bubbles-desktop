@@ -1,6 +1,9 @@
 package team.elrant.bubbles.xmpp;
 
-import org.jivesoftware.smack.*;
+import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.roster.Roster;
@@ -14,9 +17,10 @@ import org.jxmpp.jid.impl.JidCreate;
 import java.io.IOException;
 
 public class ConnectedUser extends User {
-    private Roster roster;
     private final String password;
+    private Roster roster;
     private AbstractXMPPConnection connection = null;
+
     public ConnectedUser(String username, String password, String serviceName) {
         super(username, serviceName);
         this.password = password;
@@ -46,8 +50,8 @@ public class ConnectedUser extends User {
             if (!super.getUsername().equals("dummy")) {
                 // 5. Add or remove contacts as needed
                 BareJid dummyJid = JidCreate.bareFrom("dummy@elrant.team");
-                if(roster.getEntry(dummyJid) == null) {
-                    addContact(dummyJid.toString() , "Dummy");
+                if (roster.getEntry(dummyJid) == null) {
+                    addContact(dummyJid.toString(), "Dummy");
                 } else {
                     sendMessage(dummyJid.toString(), "Hello, world!", chatManager);
                 }
@@ -104,5 +108,9 @@ public class ConnectedUser extends User {
 
     public Roster getRoster() {
         return roster;
+    }
+
+    public boolean isLoggedIn() {
+        return connection.isAuthenticated();
     }
 }
