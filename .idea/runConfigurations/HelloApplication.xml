@@ -3,7 +3,7 @@
     <option name="ALTERNATIVE_JRE_PATH" value="21" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="team.elrant.bubbles.gui.HelloApplication" />
-    <module name="Bubbles" />
+    <module name="bubbles" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="team.elrant.bubbles.gui.*" />
