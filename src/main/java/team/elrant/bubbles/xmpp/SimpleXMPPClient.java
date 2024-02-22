@@ -4,8 +4,8 @@ public class SimpleXMPPClient {
     public static void main(String[] args) {
 
         // XMPP connection details
-        String username = "";
-        String password = "";
+        String username = "username";
+        String password = "password";
         String serviceName = "elrant.team";
 
         ConnectedUser user = new ConnectedUser(username, password, serviceName);
