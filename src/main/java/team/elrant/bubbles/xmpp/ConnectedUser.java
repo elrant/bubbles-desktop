@@ -43,7 +43,7 @@ public class ConnectedUser extends User {
             roster = Roster.getInstanceFor(connection);
             roster.reloadAndWait(); // Ensure roster is up-to-date
 
-            if (super.getUsername() != "dummy") {
+            if (!super.getUsername().equals("dummy")) {
                 // 5. Add or remove contacts as needed
                 BareJid dummyJid = JidCreate.bareFrom("dummy@elrant.team");
                 if(roster.getEntry(dummyJid) == null) {
@@ -65,6 +65,7 @@ public class ConnectedUser extends User {
             }
         } catch (Exception e) {
             System.err.println("Error adding contact: " + e);
+
         }
     }
 
@@ -93,9 +94,9 @@ public class ConnectedUser extends User {
         connection.disconnect();
     }
 
-    public void acceptSubscription(String contactJid) {
+    public void acceptSubscription(String contactJid, String nickname) {
         try {
-            roster.createEntry(JidCreate.bareFrom(contactJid), null, null);
+            roster.createItemAndRequestSubscription(JidCreate.bareFrom(contactJid), nickname, null);
         } catch (Exception e) {
             System.err.println("Error accepting subscription: " + e);
         }

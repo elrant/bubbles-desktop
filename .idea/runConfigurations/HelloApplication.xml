@@ -1,8 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="HelloApplication" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="ALTERNATIVE_JRE_PATH" value="C:\Program Files\Java\jdk-21" />
+    <option name="ALTERNATIVE_JRE_PATH" value="21" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="team.elrant.bubbles.gui.HelloApplication" />
-    <module name="bubbles" />
+    <module name="Bubbles" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="team.elrant.bubbles.gui.*" />
