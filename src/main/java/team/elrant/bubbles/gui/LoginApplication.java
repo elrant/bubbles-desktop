@@ -19,8 +19,10 @@ public class LoginApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         stage.setTitle("Login");
         stage.setScene(scene);
-        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+        stage.centerOnScreen();
+        stage.setResizable(false);
         stage.show();
+
     }
 
 }

@@ -2,8 +2,10 @@ package team.elrant.bubbles.gui;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import team.elrant.bubbles.xmpp.ConnectedUser;
 
 public class LoginController {
@@ -13,6 +15,10 @@ public class LoginController {
     private PasswordField password_field;
     @FXML
     private Button submitButton; // Reference the button
+    @FXML
+    private AnchorPane formPane; // Reference the form pane
+    @FXML
+    private Label loginLabel; // Reference the login label
 
     @FXML
     protected void onSubmitButtonClick() {
@@ -33,10 +39,7 @@ public class LoginController {
     }
 
     @FXML
-    public void initialize() { // Add an initialize method
-        // Apply BootstrapFX styling
-        username_field.getStyleClass().add("form-control");
-        password_field.getStyleClass().add("form-control");
-        submitButton.getStyleClass().addAll("btn", "btn-primary");
+    public void initialize() {
+        // Styling goes here
     }
 }
