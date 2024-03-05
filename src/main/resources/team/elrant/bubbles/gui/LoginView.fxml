@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<Pane prefHeight="203.0" prefWidth="312.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="team.elrant.bubbles.gui.LoginController">
+<Pane prefHeight="189.0" prefWidth="295.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="team.elrant.bubbles.gui.LoginController">
    <AnchorPane layoutY="14.0">
       <children>
           <AnchorPane fx:id="formPane" layoutX="22.0" layoutY="55.0" prefHeight="56.0" prefWidth="222.0">
@@ -29,4 +33,6 @@
       </children>
    </AnchorPane>
     <Button fx:id="submitButton" layoutX="226.0" layoutY="150.0" mnemonicParsing="false" onAction="#onSubmitButtonClick" text="Submit" />
+   <Label fx:id="failedLoginLabel" layoutX="36.0" layoutY="154.0" prefHeight="17.0" prefWidth="174.0" text="Wrong username or password!" textFill="#b50000" visible="false" />
+   <Label fx:id="successfulLoginLabel" layoutX="115.0" layoutY="154.0" text="Successful login!" textFill="#00bc00" visible="false" />
 </Pane>

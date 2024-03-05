@@ -9,7 +9,12 @@ public class SimpleXMPPClient {
         String serviceName = "elrant.team";
 
         ConnectedUser user = new ConnectedUser(username, password, serviceName);
-        user.initializeConnection();
+        try {
+            user.initializeConnection();
+            System.out.println("Connection established!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         user.disconnect();
     }
 }

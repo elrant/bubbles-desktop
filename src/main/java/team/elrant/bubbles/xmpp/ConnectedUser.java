@@ -35,38 +35,34 @@ public class ConnectedUser extends User {
      * The InitializeConnection method takes no parameters and connects to the server.
      * After connecting, it sends a message to the test user.
      */
-    public void initializeConnection() {
-        try {
-            // 1. Create the connection configuration
-            XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-                    .setUsernameAndPassword(super.getUsername(), password)
-                    .setXmppDomain(super.getServiceName())
-                    .setSecurityMode(ConnectionConfiguration.SecurityMode.required)
-                    .build();
+    public void initializeConnection() throws SmackException, InterruptedException, XMPPException, IOException {
+        // 1. Create the connection configuration
+        XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
+                .setUsernameAndPassword(super.getUsername(), password)
+                .setXmppDomain(super.getServiceName())
+                .setSecurityMode(ConnectionConfiguration.SecurityMode.required)
+                .build();
 
-            // 2. Create the connection
-            connection = new XMPPTCPConnection(config);
-            connection.connect();
-            connection.login();
+        // 2. Create the connection
+        connection = new XMPPTCPConnection(config);
+        connection.connect();
+        connection.login();
 
-            // 3. Create a chat manager
-            ChatManager chatManager = ChatManager.getInstanceFor(connection);
+        // 3. Create a chat manager
+        ChatManager chatManager = ChatManager.getInstanceFor(connection);
 
-            // 4. Get the roster
-            roster = Roster.getInstanceFor(connection);
-            roster.reloadAndWait(); // Initialize it
+        // 4. Get the roster
+        roster = Roster.getInstanceFor(connection);
+        roster.reloadAndWait(); // Initialize it
 
-            if (!super.getUsername().equals("dummy") && !super.getServiceName().equals("elrant.team")) {
-                // 5. Add the test user to the roster as needed
-                BareJid dummyJid = JidCreate.bareFrom("dummy@elrant.team");
-                if (roster.getEntry(dummyJid) == null) {
-                    addContact(dummyJid.toString(), "Dummy");
-                } else {
-                    sendMessage(dummyJid.toString(), "Hello, world!", chatManager);
-                }
+        if (!(super.getUsername().equals("dummy") && super.getServiceName().equals("elrant.team"))) {
+            // 5. Add the test user to the roster as needed
+            BareJid dummyJid = JidCreate.bareFrom("dummy@elrant.team");
+            if (roster.getEntry(dummyJid) == null) {
+                addContact(dummyJid.toString(), "Dummy");
+            } else {
+                sendMessage(dummyJid.toString(), "Hello, world!", chatManager);
             }
-        } catch (SmackException | InterruptedException | XMPPException | IOException e) {
-            System.err.println("Error sending XMPP message: " + e);
         }
     }
 

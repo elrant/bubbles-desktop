@@ -11,7 +11,11 @@ public class DummyUser {
         String serviceName = "elrant.team";
 
         ConnectedUser user = new ConnectedUser(username, password, serviceName);
-        user.initializeConnection();
+        try {
+            user.initializeConnection();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         // Accept every incoming subscription request
         Roster roster = user.getRoster();
         roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);

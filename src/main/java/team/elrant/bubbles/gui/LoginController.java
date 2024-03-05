@@ -19,19 +19,28 @@ public class LoginController {
     private AnchorPane formPane; // Reference the form pane
     @FXML
     private Label loginLabel; // Reference the login label
+    @FXML
+    private Label failedLoginLabel; // Reference the "Wrong username or password" text
+    @FXML
+    private Label successfulLoginLabel; // Reference the "Successful login" text
 
     @FXML
     protected void onSubmitButtonClick() {
         ConnectedUser user = new ConnectedUser(username_field.getText(), password_field.getText(), "elrant.team");
-        user.initializeConnection();
+        try {
+            user.initializeConnection();
+            failedLoginLabel.setVisible(false);
+            successfulLoginLabel.setVisible(true);
+        } catch (Exception e) {
+            // e.printStackTrace(); // Only for debugging purposes
+            failedLoginLabel.setVisible(true);
+        }
 
-        // Placeholder: Successful Login Handling
+        // Placeholder
         if (user.isLoggedIn()) {
             // Close the login window and proceed to the main application
             submitButton.getScene().getWindow().hide();
-            // ... (Load the main application UI)
         } else {
-            // Display an error message (a simple option for now)
             System.out.println("Login failed. Check username and password.");
         }
 
