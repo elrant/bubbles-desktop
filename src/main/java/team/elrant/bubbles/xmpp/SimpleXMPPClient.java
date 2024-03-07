@@ -8,9 +8,9 @@ public class SimpleXMPPClient {
         String password = "";
         String serviceName = "elrant.team";
 
-        ConnectedUser user = new ConnectedUser(username, password, serviceName);
+        ConnectedUser user = null;
         try {
-            user.initializeConnection();
+            user = new ConnectedUser(username, password, serviceName);
             System.out.println("Connection established!");
         } catch (Exception e) {
             e.printStackTrace(); // Replace with more robust error handling in the future

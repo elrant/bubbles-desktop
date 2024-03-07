@@ -7,6 +7,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import team.elrant.bubbles.xmpp.ConnectedUser;
+import team.elrant.bubbles.xmpp.User;
 
 public class LoginController {
     @FXML
@@ -23,32 +24,37 @@ public class LoginController {
     private Label failedLoginLabel; // Reference the "Wrong username or password" text
     @FXML
     private Label successfulLoginLabel; // Reference the "Successful login" text
+    private ConnectedUser connectedUser = null;
 
     @FXML
     protected void onSubmitButtonClick() {
-        ConnectedUser user = new ConnectedUser(username_field.getText(), password_field.getText(), "elrant.team");
         try {
-            user.initializeConnection();
-            failedLoginLabel.setVisible(false);
-            successfulLoginLabel.setVisible(true);
+            connectedUser = new ConnectedUser(username_field.getText(), password_field.getText(), "elrant.team");
         } catch (Exception e) {
             // e.printStackTrace(); // Only for debugging purposes
             failedLoginLabel.setVisible(true);
         }
 
-        // Placeholder
-        if (user.isLoggedIn()) {
+        if (connectedUser != null && connectedUser.isLoggedIn()) {
             // Close the login window and proceed to the main application
+            failedLoginLabel.setVisible(false);
+            successfulLoginLabel.setVisible(true);
             submitButton.getScene().getWindow().hide();
-        } else {
-            System.out.println("Login failed. Check username and password.");
+            connectedUser.disconnect();
+            connectedUser.saveUserToFile("user.dat");
         }
-
-        user.disconnect(); // Disconnect regardless of login result
     }
 
     @FXML
     public void initialize() {
         // Styling goes here
+        try {
+            User userFromFile = new User("user.dat");
+            if( (userFromFile.getUsername() != null) && !(userFromFile.getUsername().isEmpty()) ) {
+                username_field.setText(userFromFile.getUsername());
+            }
+        } catch (Exception ignored) {
+            // Do nothing
+        }
     }
 }
