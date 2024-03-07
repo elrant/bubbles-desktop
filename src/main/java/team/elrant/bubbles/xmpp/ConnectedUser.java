@@ -25,6 +25,7 @@ public class ConnectedUser extends User {
     private Roster roster;
     private AbstractXMPPConnection connection = null;    // When accessing this property, make sure it's not null
                                                         // (or just run InitializeConnection first)
+    private ChatManager chatManager = null;           // Same warning as connection
 
     public ConnectedUser(String username, String password, String serviceName) {
         super(username, serviceName);
@@ -34,6 +35,7 @@ public class ConnectedUser extends User {
     /**
      * The InitializeConnection method takes no parameters and connects to the server.
      * After connecting, it sends a message to the test user.
+     * This method assigns the connection and chatManager properties.
      */
     public void initializeConnection() throws SmackException, InterruptedException, XMPPException, IOException {
         // 1. Create the connection configuration
@@ -49,7 +51,7 @@ public class ConnectedUser extends User {
         connection.login();
 
         // 3. Create a chat manager
-        ChatManager chatManager = ChatManager.getInstanceFor(connection);
+        chatManager = ChatManager.getInstanceFor(connection);
 
         // 4. Get the roster
         roster = Roster.getInstanceFor(connection);
@@ -61,11 +63,16 @@ public class ConnectedUser extends User {
             if (roster.getEntry(dummyJid) == null) {
                 addContact(dummyJid.toString(), "Dummy");
             } else {
-                sendMessage(dummyJid.toString(), "Hello, world!", chatManager);
+                sendMessage(dummyJid.toString(), "Hello, world!");
             }
         }
     }
 
+    /**
+     * Adds a contact to the user's roster.
+     * @param contactJid the JID of the contact to add (user@service.name)
+     * @param nickname the user defined nickname of the contact, defaults to the contact's username
+     */
     private void addContact(String contactJid, String nickname) {
         try {
             BareJid bareJid = JidCreate.bareFrom(contactJid);
@@ -78,6 +85,10 @@ public class ConnectedUser extends User {
         }
     }
 
+    /**
+     * Removes a contact from the user's roster.
+     * @param contactJid the JID of the contact to remove (user@service.name)
+     */
     private void removeContact(String contactJid) {
         try {
             RosterEntry entry = roster.getEntry(JidCreate.entityBareFrom(contactJid));
@@ -89,7 +100,12 @@ public class ConnectedUser extends User {
         }
     }
 
-    private void sendMessage(String contactJid, String message, ChatManager chatManager) {
+    /**
+     * Sends a message to a contact.
+     * @param contactJid the JID of the contact to send the message to (user@service.name)
+     * @param message the message to send
+     */
+    private void sendMessage(String contactJid, String message) {
         try {
             EntityBareJid recipientJid = JidCreate.entityBareFrom(contactJid);
             Chat chat = chatManager.chatWith(recipientJid);
@@ -99,26 +115,22 @@ public class ConnectedUser extends User {
         }
     }
 
-    public void disconnect() {
-        connection.disconnect();
-    }
-
+    /**
+     * Accepts a subscription request from a contact.
+     * @param contactJid the JID of the contact to accept the subscription from (user@service.name)
+     * @param nickname the user defined nickname of the contact, defaults to the contact's username
+     */
     public void acceptSubscription(String contactJid, String nickname) {
+        if (nickname == null || nickname.isEmpty()) {
+            nickname = contactJid.split("@")[0];
+        }
         try {
             roster.createItemAndRequestSubscription(JidCreate.bareFrom(contactJid), nickname, null);
         } catch (Exception e) {
             System.err.println("Error accepting subscription: " + e);
         }
     }
-
-    public Roster getRoster() {
-        return roster;
-    }
-
-    public boolean isLoggedIn() {
-        return connection.isAuthenticated();
-    }
-
+    
     /**
      * Saves the user information (excluding password) to a file.
      * @param filename The name of the file to save the user information to.
@@ -160,5 +172,17 @@ public class ConnectedUser extends User {
             System.err.println("Error loading user information from file: " + e);
         }
         return connectedUser;
+    }
+
+    public Roster getRoster() {
+        return roster;
+    }
+
+    public boolean isLoggedIn() {
+        return connection.isAuthenticated();
+    }
+
+    public void disconnect() {
+        connection.disconnect();
     }
 }

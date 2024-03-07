@@ -13,7 +13,7 @@ public class SimpleXMPPClient {
             user.initializeConnection();
             System.out.println("Connection established!");
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Replace with more robust error handling in the future
         }
         user.disconnect();
     }

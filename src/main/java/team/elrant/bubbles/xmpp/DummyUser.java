@@ -14,7 +14,7 @@ public class DummyUser {
         try {
             user.initializeConnection();
         } catch (Exception e){
-            e.printStackTrace();
+            e.printStackTrace(); // Replace with more robust error handling in the future
         }
         // Accept every incoming subscription request
         Roster roster = user.getRoster();
