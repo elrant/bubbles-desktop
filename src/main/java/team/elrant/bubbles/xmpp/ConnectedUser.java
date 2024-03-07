@@ -185,4 +185,10 @@ public class ConnectedUser extends User {
     public void disconnect() {
         connection.disconnect();
     }
+
+    public void addIncomingMessageListener() {
+        chatManager.addIncomingListener((from, message, chat) -> {
+            System.out.println("Received message from " + from + ": " + message.getBody());
+        });
+    }
 }
