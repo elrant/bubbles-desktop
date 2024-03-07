@@ -8,20 +8,22 @@ public class SimpleXMPPClient {
         String password = "";
         String serviceName = "elrant.team";
 
-        ConnectedUser user = null;
+        ConnectedUser connectedUser = null;
         try {
-            user = new ConnectedUser(username, password, serviceName);
+            connectedUser = new ConnectedUser(username, password, serviceName);
             System.out.println("Connection established!");
         } catch (Exception e) {
             e.printStackTrace(); // Replace with more robust error handling in the future
         }
 
         try {
-            user.addIncomingMessageListener(); /* Print any incoming messages */
-            Thread.sleep(10000); /* Sleep for 10 seconds */
+            if (connectedUser != null && connectedUser.isLoggedIn()) {
+                connectedUser.addIncomingMessageListener(); /* Print any incoming messages */
+                Thread.sleep(10000); /* Sleep for 10 seconds */
+                connectedUser.disconnect();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace(); // Replace with more robust error handling in the future
         }
-        user.disconnect();
     }
 }

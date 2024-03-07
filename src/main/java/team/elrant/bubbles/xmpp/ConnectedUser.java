@@ -21,7 +21,7 @@ import java.io.*;
  * It describes how the app's current user should connect, behave, send messages, etc.
  */
 public class ConnectedUser extends User {
-    private String password;
+    private final String password;
     private Roster roster;
     private AbstractXMPPConnection connection = null;   // When accessing this property, make sure it's not null
                                                         // (or just run InitializeConnection first)
