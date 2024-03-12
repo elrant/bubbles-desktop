@@ -23,14 +23,13 @@ import java.io.*;
 public class ConnectedUser extends User {
     private final String password;
     private Roster roster;
-    private AbstractXMPPConnection connection = null;   // When accessing this property, make sure it's not null
+    private AbstractXMPPConnection connection = null;    // When accessing this property, make sure it's not null
                                                         // (or just run InitializeConnection first)
-    private ChatManager chatManager = null;             // Same warning as connection
+    private ChatManager chatManager = null;           // Same warning as connection
 
-    public ConnectedUser(String username, String password, String serviceName) throws SmackException, IOException, XMPPException, InterruptedException {
+    public ConnectedUser(String username, String password, String serviceName) {
         super(username, serviceName);
         this.password = password;
-        this.initializeConnection();
     }
 
     /**
@@ -115,7 +114,9 @@ public class ConnectedUser extends User {
             System.err.println("Error sending XMPP message: " + e);
         }
     }
-
+public void getSendMessage(String contactJid, String message){
+        sendMessage(contactJid,message);
+}
     /**
      * Accepts a subscription request from a contact.
      * @param contactJid the JID of the contact to accept the subscription from (user@service.name)
@@ -137,18 +138,42 @@ public class ConnectedUser extends User {
      * @param filename The name of the file to save the user information to.
      */
     public void saveUserToFile(String filename) {
-        try (FileOutputStream fileOut = new FileOutputStream(filename); ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+        try (FileOutputStream fileOut = new FileOutputStream(filename);
+             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
 
             // Create a temporary user object without the password
             User userWithoutPassword = new User(super.getUsername(), super.getServiceName());
 
-            // Write the user object (without the password) to the file
+            // Write the user object (without password) to the file
             objectOut.writeObject(userWithoutPassword);
 
             System.out.println("User information (excluding password) saved to " + filename);
         } catch (IOException e) {
             System.err.println("Error saving user information to file: " + e);
         }
+    }
+
+    /**
+     * Loads the user information from a file and initializes a ConnectedUser object.
+     * @param filename The name of the file containing the serialized user information.
+     * @return A ConnectedUser object initialized with the loaded user information.
+     */
+    public static ConnectedUser loadUserFromFile(String filename) {
+        ConnectedUser connectedUser = null;
+        try (FileInputStream fileIn = new FileInputStream(filename);
+             ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
+
+            // Read the serialized user object from the file
+            User user = (User) objectIn.readObject();
+
+            // Initialize a new ConnectedUser object with the loaded user information
+            connectedUser = new ConnectedUser(user.getUsername(), "password", user.getServiceName());
+
+            System.out.println("User information loaded from " + filename);
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Error loading user information from file: " + e);
+        }
+        return connectedUser;
     }
 
     public Roster getRoster() {
@@ -164,6 +189,8 @@ public class ConnectedUser extends User {
     }
 
     public void addIncomingMessageListener() {
-        chatManager.addIncomingListener((from, message, chat) -> System.out.println("Received message from " + from + ": " + message.getBody()));
+        chatManager.addIncomingListener((from, message, chat) -> {
+            System.out.println("Received message from " + from + ": " + message.getBody());
+        });
     }
 }

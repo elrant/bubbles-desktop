@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="team.elrant.bubbles.gui.ChatPageController"
+            prefHeight="400.0" prefWidth="600.0">
+    //Text Area for chat
+    <TextArea fx:id="chatTextArea" prefWidth="400" prefHeight="600" editable="false"/>
+
+    //Text Area for message
+    <TextArea fx:id="messageTextArea" prefWidth="300" prefHeight="100" layoutY="600"/>
+
+    //Button for message
+    <Button fx:id="sendButton" text="Send" onAction="#sendMessage" layoutY="620" layoutX="320"/>
+
+    //Label for error
+    <Label fx:id="failedLoginLabel" text="Failed to send message!" visible="false" textFill="red" layoutX="320" layoutY="650"/>
+</AnchorPane>
