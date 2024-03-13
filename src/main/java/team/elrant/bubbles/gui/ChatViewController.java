@@ -1,14 +1,12 @@
 package team.elrant.bubbles.gui;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import team.elrant.bubbles.xmpp.ConnectedUser;
-import java.io.IOException;
 
-public class ChatPageController{
+public class ChatViewController {
     @FXML
     private TextArea chatTextArea;
     @FXML
@@ -18,13 +16,16 @@ public class ChatPageController{
     @FXML
     private Label failedLoginLabel;
     private ConnectedUser connectedUser;
-    private  String contactJid;
-    private String password;
+    private String contactJid;
 
-    public ChatPageController(ConnectedUser connectedUser,String contactJid,String password){
+    public ChatViewController() {
+        // Default constructor
+    }
+
+
+    public ChatViewController(ConnectedUser connectedUser, String contactJid){
         this.connectedUser = connectedUser;
         this.contactJid = contactJid;
-        this.password = password;
     }
 
     @FXML

@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import team.elrant.bubbles.xmpp.ConnectedUser;
 import team.elrant.bubbles.xmpp.User;
 
@@ -30,6 +31,7 @@ public class LoginController {
     protected void onSubmitButtonClick() {
         try {
             connectedUser = new ConnectedUser(username_field.getText(), password_field.getText(), "elrant.team");
+            connectedUser.initializeConnection();
         } catch (Exception e) {
             // e.printStackTrace(); // Only for debugging purposes
             failedLoginLabel.setVisible(true);
@@ -37,11 +39,16 @@ public class LoginController {
 
         if (connectedUser != null && connectedUser.isLoggedIn()) {
             // Close the login window and proceed to the main application
-            failedLoginLabel.setVisible(false);
-            successfulLoginLabel.setVisible(true);
-            submitButton.getScene().getWindow().hide();
-            connectedUser.disconnect();
-            connectedUser.saveUserToFile("user.dat");
+            Stage stage = (Stage) submitButton.getScene().getWindow();
+            stage.close(); // Close the login window
+
+            // Open the chat window
+            try {
+                ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, "dummy@elrant.team");
+                chatViewApplication.start(new Stage());
+            } catch (Exception e) {
+                e.printStackTrace(); // Replace with more robust error handling in the future
+            }
         }
     }
 
