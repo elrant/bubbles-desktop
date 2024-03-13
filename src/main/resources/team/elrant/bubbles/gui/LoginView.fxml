@@ -9,29 +9,28 @@
 <?import javafx.scene.text.Font?>
 
 <Pane prefHeight="189.0" prefWidth="295.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="team.elrant.bubbles.gui.LoginController">
-   <AnchorPane layoutY="14.0">
-      <children>
-          <AnchorPane fx:id="formPane" layoutX="22.0" layoutY="55.0" prefHeight="56.0" prefWidth="222.0">
-              <Label alignment="BASELINE_LEFT" layoutY="4.0" text="Username">
-                  <font>
-                      <Font name="Segoe UI Semibold" size="12.0" />
-                  </font>
-              </Label>
-              <TextField fx:id="username_field" layoutX="80.0" promptText="Username" />
-              <Label alignment="BASELINE_LEFT" layoutX="1.0" layoutY="38.0" text="Password">
-                  <font>
-                      <Font name="Segoe UI Semibold" size="12.0" />
-                  </font>
-              </Label>
-              <PasswordField fx:id="password_field" layoutX="80.0" layoutY="34.0" promptText="********" />
-          </AnchorPane>
-          <Label fx:id="loginLabel" alignment="BASELINE_CENTER" contentDisplay="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="293.0" text="Log-in" textAlignment="CENTER">
-              <font>
-                  <Font name="Segoe UI Semibold" size="25.0" />
-              </font>
-          </Label>
-      </children>
-   </AnchorPane>
+    <AnchorPane layoutY="14.0">
+        <AnchorPane fx:id="formPane" layoutX="22.0" layoutY="55.0" prefHeight="56.0" prefWidth="222.0">
+            <Label alignment="BASELINE_LEFT" layoutY="4.0" text="Username">
+                <font>
+                    <Font name="Segoe UI Semibold" size="12.0"/>
+                </font>
+            </Label>
+            <TextField fx:id="username_field" layoutX="80.0" promptText="Username"/>
+            <Label alignment="BASELINE_LEFT" layoutX="1.0" layoutY="38.0" text="Password">
+                <font>
+                    <Font name="Segoe UI Semibold" size="12.0"/>
+                </font>
+            </Label>
+            <PasswordField fx:id="password_field" layoutX="80.0" layoutY="34.0" promptText="********"/>
+        </AnchorPane>
+        <Label fx:id="loginLabel" alignment="BASELINE_CENTER" contentDisplay="CENTER" maxWidth="-Infinity"
+               minWidth="-Infinity" prefHeight="39.0" prefWidth="293.0" text="Log-in" textAlignment="CENTER">
+            <font>
+                <Font name="Segoe UI Semibold" size="25.0"/>
+            </font>
+        </Label>
+    </AnchorPane>
     <Button fx:id="submitButton" layoutX="226.0" layoutY="150.0" mnemonicParsing="false" onAction="#onSubmitButtonClick" text="Submit" />
    <Label fx:id="failedLoginLabel" layoutX="36.0" layoutY="154.0" prefHeight="17.0" prefWidth="174.0" text="Wrong username or password!" textFill="#b50000" visible="false" />
    <Label fx:id="successfulLoginLabel" layoutX="115.0" layoutY="154.0" text="Successful login!" textFill="#00bc00" visible="false" />

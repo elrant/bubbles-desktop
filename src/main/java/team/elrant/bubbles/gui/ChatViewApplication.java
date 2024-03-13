@@ -8,8 +8,8 @@ import javafx.stage.Stage;
 import team.elrant.bubbles.xmpp.ConnectedUser;
 
 public class ChatViewApplication extends Application {
-    private ConnectedUser connectedUser = null;
-    private String contactJid = null;
+    private final ConnectedUser connectedUser;
+    private final String contactJid;
 
     public ChatViewApplication(ConnectedUser connectedUser, String contactJid) {
         this.connectedUser = connectedUser;

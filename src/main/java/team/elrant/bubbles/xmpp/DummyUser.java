@@ -9,15 +9,15 @@ public class DummyUser {
         String username = "dummy";
         String password = "";
         String serviceName = "elrant.team";
-
-        ConnectedUser user = null;
+        Roster roster;
+        ConnectedUser user;
         try {
             user = new ConnectedUser(username, password, serviceName);
-        } catch (Exception e){
-            e.printStackTrace(); // Replace with more robust error handling in the future
+            // Accept every incoming subscription request
+            roster = user.getRoster();
+            roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
+        } catch (Exception ignored){
+            // Replace with more robust error handling in the future
         }
-        // Accept every incoming subscription request
-        Roster roster = user.getRoster();
-        roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
     }
 }

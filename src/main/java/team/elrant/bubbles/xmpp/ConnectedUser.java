@@ -144,7 +144,7 @@ public void getSendMessage(String contactJid, String message){
             // Create a temporary user object without the password
             User userWithoutPassword = new User(super.getUsername(), super.getServiceName());
 
-            // Write the user object (without password) to the file
+            // Write the user object (without a password) to the file
             objectOut.writeObject(userWithoutPassword);
 
             System.out.println("User information (excluding password) saved to " + filename);

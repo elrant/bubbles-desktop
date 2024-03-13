@@ -11,7 +11,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <junit.version>5.10.0</junit.version>
+    <junit.version>5.10.1</junit.version>
     <javafx.version>21</javafx.version>
   </properties>
 
@@ -29,7 +29,7 @@
     <dependency>
       <groupId>org.controlsfx</groupId>
       <artifactId>controlsfx</artifactId>
-      <version>11.1.2</version>
+      <version>11.2.1</version>
     </dependency>
     <dependency>
       <groupId>com.dlsc.formsfx</groupId>
@@ -45,7 +45,7 @@
     <dependency>
       <groupId>net.synedra</groupId>
       <artifactId>validatorfx</artifactId>
-      <version>0.4.0</version>
+      <version>0.4.2</version>
       <exclusions>
         <exclusion>
           <groupId>org.openjfx</groupId>
@@ -102,7 +102,7 @@
       <dependency>
           <groupId>org.jetbrains</groupId>
           <artifactId>annotations</artifactId>
-          <version>RELEASE</version>
+          <version>24.1.0</version>
           <scope>compile</scope>
       </dependency>
   </dependencies>
@@ -141,4 +141,10 @@
       </plugin>
     </plugins>
   </build>
+  <repositories>
+    <repository>
+        <id>central</id>
+      <url>https://repo.maven.apache.org/maven2/</url>
+    </repository>
+  </repositories>
 </project>
