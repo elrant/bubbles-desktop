@@ -39,7 +39,7 @@ public class ChatViewController {
     protected void sendMessage(){
         try{
             String message = messageTextArea.getText();
-            connectedUser.getSendMessage(contactJid,message);
+            connectedUser.sendMessage(contactJid,message);
             chatTextArea.appendText("Me: "+ message + "\n");
             messageTextArea.clear();
         }

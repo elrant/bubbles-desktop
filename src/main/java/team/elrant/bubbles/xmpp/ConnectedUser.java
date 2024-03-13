@@ -105,7 +105,7 @@ public class ConnectedUser extends User {
      * @param contactJid the JID of the contact to send the message to (user@service.name)
      * @param message the message to send
      */
-    private void sendMessage(String contactJid, String message) {
+    public void sendMessage(String contactJid, String message) {
         try {
             EntityBareJid recipientJid = JidCreate.entityBareFrom(contactJid);
             Chat chat = chatManager.chatWith(recipientJid);
@@ -114,9 +114,7 @@ public class ConnectedUser extends User {
             System.err.println("Error sending XMPP message: " + e);
         }
     }
-public void getSendMessage(String contactJid, String message){
-        sendMessage(contactJid,message);
-}
+
     /**
      * Accepts a subscription request from a contact.
      * @param contactJid the JID of the contact to accept the subscription from (user@service.name)
