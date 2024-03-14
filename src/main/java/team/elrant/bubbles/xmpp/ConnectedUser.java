@@ -27,15 +27,25 @@ public class ConnectedUser extends User {
                                                         // (or just run InitializeConnection first)
     private ChatManager chatManager = null;           // Same warning as connection
 
+    /**
+     * Constructs a ConnectedUser object with the specified username, password, and service name.
+     * @param username The username of the user.
+     * @param password The password of the user.
+     * @param serviceName The service name of the XMPP server.
+     */
     public ConnectedUser(String username, String password, String serviceName) {
         super(username, serviceName);
         this.password = password;
     }
 
     /**
-     * The InitializeConnection method takes no parameters and connects to the server.
+     * Initializes the XMPP connection, logs in, sets up chat manager, and populates the roster.
      * After connecting, it sends a message to the test user.
      * This method assigns the connection and chatManager properties.
+     * @throws SmackException If there is an issue with the XMPP protocol.
+     * @throws InterruptedException If the operation is interrupted.
+     * @throws XMPPException If there is an XMPP related error.
+     * @throws IOException If an I/O error occurs.
      */
     public void initializeConnection() throws SmackException, InterruptedException, XMPPException, IOException {
         // 1. Create the connection configuration
@@ -130,7 +140,7 @@ public class ConnectedUser extends User {
             System.err.println("Error accepting subscription: " + e);
         }
     }
-    
+
     /**
      * Saves the user information (excluding password) to a file.
      * @param filename The name of the file to save the user information to.
@@ -174,18 +184,32 @@ public class ConnectedUser extends User {
         return connectedUser;
     }
 
+    /**
+     * Retrieves the roster of the connected user.
+     * @return The roster of the connected user.
+     */
     public Roster getRoster() {
         return roster;
     }
 
+    /**
+     * Checks if the user is currently logged in.
+     * @return true if the user is logged in, otherwise false.
+     */
     public boolean isLoggedIn() {
         return connection.isAuthenticated();
     }
 
+    /**
+     * Disconnects the user from the XMPP server.
+     */
     public void disconnect() {
         connection.disconnect();
     }
 
+    /**
+     * Adds an incoming message listener to the chat manager.
+     */
     public void addIncomingMessageListener() {
         chatManager.addIncomingListener((from, message, chat) -> {
             System.out.println("Received message from " + from + ": " + message.getBody());

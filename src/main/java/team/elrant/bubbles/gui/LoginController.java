@@ -10,6 +10,10 @@ import javafx.stage.Stage;
 import team.elrant.bubbles.xmpp.ConnectedUser;
 import team.elrant.bubbles.xmpp.User;
 
+/**
+ * The LoginController class controls the login functionality in the GUI.
+ * It handles user authentication and navigation to the main application.
+ */
 public class LoginController {
     @FXML
     private TextField username_field;
@@ -27,6 +31,10 @@ public class LoginController {
     private Label successfulLoginLabel; // Reference the "Successful login" text
     private ConnectedUser connectedUser = null;
 
+    /**
+     * Handles the action when the submit button is clicked.
+     * It attempts to log in the user using the provided credentials and navigates to the main application upon successful login.
+     */
     @FXML
     protected void onSubmitButtonClick() {
         try {
@@ -52,6 +60,10 @@ public class LoginController {
         }
     }
 
+    /**
+     * Initializes the login form.
+     * It loads the username from a file and populates the username field, if available.
+     */
     @FXML
     public void initialize() {
         // Styling goes here
