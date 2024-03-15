@@ -9,12 +9,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import team.elrant.bubbles.xmpp.ConnectedUser;
 import team.elrant.bubbles.xmpp.User;
-
-import java.io.IOException;
 
 /**
  * The LoginController class controls the login functionality in the GUI.
@@ -24,9 +22,9 @@ public class LoginController {
     private static final Logger logger = LogManager.getLogger(LoginController.class);
 
     @FXML
-    private TextField usernameField;
+    private TextField username_field;
     @FXML
-    private PasswordField passwordField;
+    private PasswordField password_field;
     @FXML
     private Button submitButton;
     @FXML
@@ -37,8 +35,7 @@ public class LoginController {
     private Label failedLoginLabel;
     @FXML
     private Label successfulLoginLabel;
-
-    private ConnectedUser connectedUser = null;
+    private @Nullable ConnectedUser connectedUser = null;
 
     /**
      * Handles the action when the submit button is clicked.
@@ -46,21 +43,16 @@ public class LoginController {
      */
     @FXML
     protected void onSubmitButtonClick() {
-        String username = usernameField.getText();
-        String password = passwordField.getText();
-
         try {
-            connectedUser = new ConnectedUser(username, password, "elrant.team");
+            connectedUser = new ConnectedUser(username_field.getText(), password_field.getText(), "elrant.team");
             connectedUser.initializeConnection();
             connectedUser.saveUserToFile("user.dat");
-            successfulLoginLabel.setVisible(true);
-        } catch (IOException | InterruptedException | SmackException | XMPPException e) {
+        } catch (Exception e) {
             logger.error("Error during login: " + e.getMessage());
             failedLoginLabel.setVisible(true);
         }
 
         if (connectedUser != null && connectedUser.isLoggedIn()) {
-            closeLoginWindow();
             openChatWindow();
         }
     }
@@ -73,20 +65,25 @@ public class LoginController {
     public void initialize() {
         try {
             User userFromFile = new User("user.dat");
-            String storedUsername = userFromFile.getUsername();
-            if (storedUsername != null && !storedUsername.isEmpty()) {
-                usernameField.setText(storedUsername);
+            if (userFromFile.getUsername() != null && !userFromFile.getUsername().isEmpty()) {
+                username_field.setText(userFromFile.getUsername());
             }
-        } catch (Exception e) {
-            logger.error("Error loading user information from file: " + e.getMessage());
+        } catch (Exception ignored) {
+            logger.warn("Failed to load user information from file.");
         }
     }
 
+    /**
+     * Closes the login window.
+     */
     private void closeLoginWindow() {
         Stage stage = (Stage) submitButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Opens the chat window.
+     */
     private void openChatWindow() {
         try {
             ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, "lucadg@elrant.team");
