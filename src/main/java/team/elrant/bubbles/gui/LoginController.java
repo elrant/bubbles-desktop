@@ -7,28 +7,37 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
 import team.elrant.bubbles.xmpp.ConnectedUser;
 import team.elrant.bubbles.xmpp.User;
+
+import java.io.IOException;
 
 /**
  * The LoginController class controls the login functionality in the GUI.
  * It handles user authentication and navigation to the main application.
  */
 public class LoginController {
+    private static final Logger logger = LogManager.getLogger(LoginController.class);
+
     @FXML
-    private TextField username_field;
+    private TextField usernameField;
     @FXML
-    private PasswordField password_field;
+    private PasswordField passwordField;
     @FXML
-    private Button submitButton; // Reference the button
+    private Button submitButton;
     @FXML
-    private AnchorPane formPane; // Reference the form pane
+    private AnchorPane formPane;
     @FXML
-    private Label loginLabel; // Reference the login label
+    private Label loginLabel;
     @FXML
-    private Label failedLoginLabel; // Reference the "Wrong username or password" text
+    private Label failedLoginLabel;
     @FXML
-    private Label successfulLoginLabel; // Reference the "Successful login" text
+    private Label successfulLoginLabel;
+
     private ConnectedUser connectedUser = null;
 
     /**
@@ -37,27 +46,22 @@ public class LoginController {
      */
     @FXML
     protected void onSubmitButtonClick() {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+
         try {
-            connectedUser = new ConnectedUser(username_field.getText(), password_field.getText(), "elrant.team");
+            connectedUser = new ConnectedUser(username, password, "elrant.team");
             connectedUser.initializeConnection();
             connectedUser.saveUserToFile("user.dat");
-        } catch (Exception e) {
-            // e.printStackTrace(); // Only for debugging purposes
+            successfulLoginLabel.setVisible(true);
+        } catch (IOException | InterruptedException | SmackException | XMPPException e) {
+            logger.error("Error during login: " + e.getMessage());
             failedLoginLabel.setVisible(true);
         }
 
         if (connectedUser != null && connectedUser.isLoggedIn()) {
-            // Close the login window and proceed to the main application
-            Stage stage = (Stage) submitButton.getScene().getWindow();
-            stage.close(); // Close the login window
-
-            // Open the chat window
-            try {
-                ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, "lucadg@elrant.team");
-                chatViewApplication.start(new Stage());
-            } catch (Exception e) {
-                e.printStackTrace(); // Replace with more robust error handling in the future
-            }
+            closeLoginWindow();
+            openChatWindow();
         }
     }
 
@@ -67,14 +71,28 @@ public class LoginController {
      */
     @FXML
     public void initialize() {
-        // Styling goes here
         try {
             User userFromFile = new User("user.dat");
-            if( (userFromFile.getUsername() != null) && !(userFromFile.getUsername().isEmpty()) ) {
-                username_field.setText(userFromFile.getUsername());
+            String storedUsername = userFromFile.getUsername();
+            if (storedUsername != null && !storedUsername.isEmpty()) {
+                usernameField.setText(storedUsername);
             }
-        } catch (Exception ignored) {
-            // Do nothing
+        } catch (Exception e) {
+            logger.error("Error loading user information from file: " + e.getMessage());
+        }
+    }
+
+    private void closeLoginWindow() {
+        Stage stage = (Stage) submitButton.getScene().getWindow();
+        stage.close();
+    }
+
+    private void openChatWindow() {
+        try {
+            ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, "lucadg@elrant.team");
+            chatViewApplication.start(new Stage());
+        } catch (Exception e) {
+            logger.error("Error opening chat window: " + e.getMessage());
         }
     }
 }

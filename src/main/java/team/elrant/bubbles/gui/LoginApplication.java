@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -16,6 +17,7 @@ public class LoginApplication extends Application {
     /**
      * The main method is the entry point of the LoginApplication.
      * It launches the JavaFX application.
+     *
      * @param args The command-line arguments (not used in this context).
      */
     public static void main(String[] args) {
@@ -29,9 +31,9 @@ public class LoginApplication extends Application {
      * @throws IOException If an error occurs while loading the FXML file.
      */
     @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(LoginApplication.class.getResource("LoginView.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+    public void start(@NotNull Stage stage) throws IOException {
+        @NotNull FXMLLoader fxmlLoader = new FXMLLoader(LoginApplication.class.getResource("LoginView.fxml"));
+        @NotNull Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         stage.setTitle("Login");
         stage.setScene(scene);
         stage.centerOnScreen();

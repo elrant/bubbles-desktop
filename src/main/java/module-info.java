@@ -14,6 +14,7 @@ module team.elrant.bubbles {
     requires smack.tcp;
     requires smack.core;
     requires org.jetbrains.annotations;
+    requires org.apache.logging.log4j;
 
     opens team.elrant.bubbles.gui to javafx.fxml;
     exports team.elrant.bubbles.gui;

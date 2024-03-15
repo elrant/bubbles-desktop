@@ -15,7 +15,8 @@ public class User implements Serializable {
 
     /**
      * Constructs a User object with the specified username and service name.
-     * @param username The username of the user.
+     *
+     * @param username    The username of the user.
      * @param serviceName The service name of the XMPP server.
      */
     public User(String username, String serviceName) {
@@ -25,28 +26,26 @@ public class User implements Serializable {
 
     /**
      * Loads the user information from a file and initializes a User object.
+     *
      * @param filename The name of the file containing the serialized user information.
      */
     public User(String filename) {
-
-        // This try syntax is a try-with-resources statement.
-        // It automatically closes the resources
-        // (in this case, the FileInputStream and ObjectInputStream)
-        // after the try block is executed.
-        try (FileInputStream fileIn = new FileInputStream(filename); ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
+        try (FileInputStream fileIn = new FileInputStream(filename);
+             ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
             User serializedUser = (User) objectIn.readObject();
             System.out.println("User information loaded from " + filename);
             this.username = serializedUser.getUsername();
             this.serviceName = serializedUser.getServiceName();
         } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Error loading user information from file: " + e);
-            this.username = null;
-            this.serviceName = null;
+            System.err.println("Error loading user information from file: " + e.getMessage());
+            this.username = "";
+            this.serviceName = "";
         }
     }
 
     /**
      * Retrieves the username of the user.
+     *
      * @return The username of the user.
      */
     public String getUsername() {
@@ -55,6 +54,7 @@ public class User implements Serializable {
 
     /**
      * Retrieves the service name of the XMPP server.
+     *
      * @return The service name of the XMPP server.
      */
     public String getServiceName() {
