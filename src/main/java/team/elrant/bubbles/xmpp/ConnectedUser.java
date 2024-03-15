@@ -81,7 +81,7 @@ public class ConnectedUser extends User {
     /**
      * Adds a contact to the user's roster.
      * @param contactJid the JID of the contact to add (user@service.name)
-     * @param nickname the user defined nickname of the contact, defaults to the contact's username
+     * @param nickname the user defined nickname of the contact, default\s to the contact's username
      */
     private void addContact(String contactJid, String nickname) {
         try {
@@ -159,29 +159,6 @@ public class ConnectedUser extends User {
         } catch (IOException e) {
             System.err.println("Error saving user information to file: " + e);
         }
-    }
-
-    /**
-     * Loads the user information from a file and initializes a ConnectedUser object.
-     * @param filename The name of the file containing the serialized user information.
-     * @return A ConnectedUser object initialized with the loaded user information.
-     */
-    public static ConnectedUser loadUserFromFile(String filename) {
-        ConnectedUser connectedUser = null;
-        try (FileInputStream fileIn = new FileInputStream(filename);
-             ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
-
-            // Read the serialized user object from the file
-            User user = (User) objectIn.readObject();
-
-            // Initialize a new ConnectedUser object with the loaded user information
-            connectedUser = new ConnectedUser(user.getUsername(), "password", user.getServiceName());
-
-            System.out.println("User information loaded from " + filename);
-        } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Error loading user information from file: " + e);
-        }
-        return connectedUser;
     }
 
     /**

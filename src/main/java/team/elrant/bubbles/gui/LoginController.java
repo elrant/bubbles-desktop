@@ -40,6 +40,7 @@ public class LoginController {
         try {
             connectedUser = new ConnectedUser(username_field.getText(), password_field.getText(), "elrant.team");
             connectedUser.initializeConnection();
+            connectedUser.saveUserToFile("user.dat");
         } catch (Exception e) {
             // e.printStackTrace(); // Only for debugging purposes
             failedLoginLabel.setVisible(true);
@@ -52,7 +53,7 @@ public class LoginController {
 
             // Open the chat window
             try {
-                ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, "dummy@elrant.team");
+                ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, "lucadg@elrant.team");
                 chatViewApplication.start(new Stage());
             } catch (Exception e) {
                 e.printStackTrace(); // Replace with more robust error handling in the future

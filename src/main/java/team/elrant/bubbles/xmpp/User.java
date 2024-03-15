@@ -28,8 +28,12 @@ public class User implements Serializable {
      * @param filename The name of the file containing the serialized user information.
      */
     public User(String filename) {
-        try (FileInputStream fileIn = new FileInputStream(filename);
-             ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
+
+        // This try syntax is a try-with-resources statement.
+        // It automatically closes the resources
+        // (in this case, the FileInputStream and ObjectInputStream)
+        // after the try block is executed.
+        try (FileInputStream fileIn = new FileInputStream(filename); ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
             User serializedUser = (User) objectIn.readObject();
             System.out.println("User information loaded from " + filename);
             this.username = serializedUser.getUsername();
