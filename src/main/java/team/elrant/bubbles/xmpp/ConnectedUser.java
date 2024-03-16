@@ -1,8 +1,11 @@
 package team.elrant.bubbles.xmpp;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat2.Chat;
@@ -18,6 +21,8 @@ import org.jxmpp.jid.impl.JidCreate;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Method;
+import java.util.function.Consumer;
 
 /**
  * The ConnectedUser class extends the User class.
@@ -25,11 +30,10 @@ import java.io.ObjectOutputStream;
  */
 public class ConnectedUser extends User {
     private static final Logger logger = LogManager.getLogger(ConnectedUser.class);
-    private final String password;
-    private Roster roster;
-    private XMPPTCPConnection connection;
-    private ChatManager chatManager;
-
+    private final @NotNull String password;
+    private @Nullable Roster roster;
+    private @Nullable XMPPTCPConnection connection;
+    private @Nullable ChatManager chatManager;
     /**
      * Constructs a ConnectedUser object with the specified username, password, and service name.
      *
@@ -37,7 +41,7 @@ public class ConnectedUser extends User {
      * @param password    The password of the user.
      * @param serviceName The service name of the XMPP server.
      */
-    public ConnectedUser(String username, String password, String serviceName) {
+    public ConnectedUser(@NotNull String username, @NotNull String password, @NotNull String serviceName) {
         super(username, serviceName);
         this.password = password;
     }
@@ -53,7 +57,7 @@ public class ConnectedUser extends User {
      * @throws IOException          If an I/O error occurs.
      */
     public void initializeConnection() throws SmackException, InterruptedException, XMPPException, IOException {
-        XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
+        @NotNull XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
                 .setUsernameAndPassword(super.getUsername(), password)
                 .setXmppDomain(super.getServiceName())
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.required)
@@ -71,9 +75,9 @@ public class ConnectedUser extends User {
         if (!(super.getUsername().equals("dummy") && super.getServiceName().equals("elrant.team"))) {
             BareJid dummyJid = JidCreate.bareFrom("dummy@elrant.team");
             if (roster != null && roster.getEntry(dummyJid) == null) {
-                addContact(dummyJid.toString(), "Dummy");
+                addContact(dummyJid, "Dummy");
             } else {
-                sendMessage(dummyJid.toString(), "Hello, world!");
+                sendMessage(dummyJid, "Hello, world!");
             }
         }
     }
@@ -84,11 +88,10 @@ public class ConnectedUser extends User {
      * @param contactJid The JID of the contact to add (user@service.name).
      * @param nickname   The user-defined nickname of the contact, defaults to the contact's username.
      */
-    private void addContact(String contactJid, String nickname) {
+    private void addContact(@NotNull BareJid contactJid, @Nullable String nickname) {
         try {
-            BareJid bareJid = JidCreate.bareFrom(contactJid);
-            if (roster != null && !roster.contains(bareJid)) {
-                roster.createItemAndRequestSubscription(bareJid, nickname, null);
+            if (roster != null && !roster.contains(contactJid)) {
+                roster.createItemAndRequestSubscription(contactJid, nickname, null);
             }
         } catch (Exception e) {
             logger.error("Error adding contact: " + e.getMessage());
@@ -100,7 +103,7 @@ public class ConnectedUser extends User {
      *
      * @param contactJid The JID of the contact to remove (user@service.name).
      */
-    private void removeContact(String contactJid) {
+    public void removeContact(@NotNull String contactJid) {
         try {
             if (roster != null) {
                 RosterEntry entry = roster.getEntry(JidCreate.entityBareFrom(contactJid));
@@ -119,11 +122,10 @@ public class ConnectedUser extends User {
      * @param contactJid The JID of the contact to send the message to (user@service.name).
      * @param message    The message to send.
      */
-    public void sendMessage(String contactJid, String message) {
+    public void sendMessage(@NotNull BareJid contactJid, @NotNull String message) {
         try {
-            EntityBareJid recipientJid = JidCreate.entityBareFrom(contactJid);
             if (chatManager != null) {
-                Chat chat = chatManager.chatWith(recipientJid);
+                Chat chat = chatManager.chatWith((EntityBareJid) contactJid);
                 chat.send(message);
             }
         } catch (Exception e) {
@@ -137,9 +139,9 @@ public class ConnectedUser extends User {
      * @param contactJid The JID of the contact to accept the subscription from (user@service.name).
      * @param nickname   The user-defined nickname of the contact, defaults to the contact's username.
      */
-    public void acceptSubscription(String contactJid, String nickname) {
+    public void acceptSubscription(@NotNull BareJid contactJid, @Nullable String nickname) {
         if (nickname == null || nickname.isEmpty()) {
-            nickname = contactJid.split("@")[0];
+            nickname = contactJid.toString().split("@")[0];
         }
         try {
             if (roster != null) {
@@ -155,11 +157,11 @@ public class ConnectedUser extends User {
      *
      * @param filename The name of the file to save the user information to.
      */
-    public void saveUserToFile(String filename) {
-        try (FileOutputStream fileOut = new FileOutputStream(filename);
-             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+    public void saveUserToFile(@NotNull String filename) {
+        try (@NotNull FileOutputStream fileOut = new FileOutputStream(filename);
+             @NotNull ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
 
-            User userWithoutPassword = new User(super.getUsername(), super.getServiceName());
+            @NotNull User userWithoutPassword = new User(super.getUsername(), super.getServiceName());
             objectOut.writeObject(userWithoutPassword);
 
             logger.info("User information (excluding password) saved to " + filename);
@@ -174,7 +176,7 @@ public class ConnectedUser extends User {
      * @return The roster of the connected user.
      * @throws IllegalStateException if the roster is not initialized.
      */
-    public Roster getRoster() {
+    public @NotNull Roster getRoster() {
         if (roster != null) {
             return roster;
         } else {
@@ -211,6 +213,20 @@ public class ConnectedUser extends User {
         if (chatManager != null) {
             chatManager.addIncomingListener((from, message, chat) ->
                     logger.info("Received message from " + from + ": " + message.getBody()));
+        }
+    }
+
+    public void addIncomingMessageListener(BareJid contactJid, Consumer<String> updateChatDisplay) {
+        if (chatManager != null) {
+            chatManager.addIncomingListener((from, message, chat) -> {
+                try {
+                    if(from != null && from.equals(contactJid) && message.getBody() != null){
+                        updateChatDisplay.accept(message.getBody());
+                    }
+                } catch (Exception e) {
+                    logger.error("Error updating chat display: " + e.getMessage());
+                }
+            });
         }
     }
 }

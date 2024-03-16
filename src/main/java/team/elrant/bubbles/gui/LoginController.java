@@ -9,7 +9,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import team.elrant.bubbles.xmpp.ConnectedUser;
 import team.elrant.bubbles.xmpp.User;
@@ -35,10 +34,11 @@ public class LoginController {
     private Label failedLoginLabel;
     @FXML
     private Label successfulLoginLabel;
-    private @Nullable ConnectedUser connectedUser = null;
+    private @Nullable ConnectedUser connectedUser;
+
 
     /**
-     * Handles the action when the submit button is clicked.
+     * Handles the action when submit button is clicked.
      * It attempts to log in the user using the provided credentials and navigates to the main application upon successful login.
      */
     @FXML
@@ -51,8 +51,8 @@ public class LoginController {
             logger.error("Error during login: " + e.getMessage());
             failedLoginLabel.setVisible(true);
         }
-
         if (connectedUser != null && connectedUser.isLoggedIn()) {
+            successfulLoginLabel.setVisible(true);
             openChatWindow();
         }
     }
@@ -65,7 +65,7 @@ public class LoginController {
     public void initialize() {
         try {
             User userFromFile = new User("user.dat");
-            if (userFromFile.getUsername() != null && !userFromFile.getUsername().isEmpty()) {
+            if (!userFromFile.getUsername().isEmpty()) {
                 username_field.setText(userFromFile.getUsername());
             }
         } catch (Exception ignored) {
@@ -86,8 +86,11 @@ public class LoginController {
      */
     private void openChatWindow() {
         try {
-            ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, "lucadg@elrant.team");
-            chatViewApplication.start(new Stage());
+            if (connectedUser != null && connectedUser.isLoggedIn()) {
+                ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, "lucadg@elrant.team");
+                chatViewApplication.start(new Stage());
+                closeLoginWindow();
+            }
         } catch (Exception e) {
             logger.error("Error opening chat window: " + e.getMessage());
         }

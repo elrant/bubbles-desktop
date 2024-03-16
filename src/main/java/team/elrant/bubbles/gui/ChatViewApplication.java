@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jxmpp.jid.BareJid;
+import org.jxmpp.jid.impl.JidCreate;
 import team.elrant.bubbles.xmpp.ConnectedUser;
 
 /**
@@ -17,8 +19,8 @@ import team.elrant.bubbles.xmpp.ConnectedUser;
 public class ChatViewApplication extends Application {
     private static final Logger logger = LogManager.getLogger(ChatViewApplication.class);
 
-    private final ConnectedUser connectedUser;
-    private final String contactJid;
+    private final @NotNull ConnectedUser connectedUser;
+    private final @NotNull String contactJid;
 
     /**
      * Constructs a ChatViewApplication with the specified connected user and contact JID.
@@ -26,7 +28,7 @@ public class ChatViewApplication extends Application {
      * @param connectedUser The connected user object.
      * @param contactJid    The JID of the contact to chat with.
      */
-    public ChatViewApplication(ConnectedUser connectedUser, String contactJid) {
+    public ChatViewApplication(@NotNull ConnectedUser connectedUser, @NotNull String contactJid) {
         this.connectedUser = connectedUser;
         this.contactJid = contactJid;
     }
@@ -47,7 +49,8 @@ public class ChatViewApplication extends Application {
             fxmlLoader.setControllerFactory(param -> {
                 try {
                     // Instantiate the controller with the required properties
-                    return new ChatViewController(connectedUser, contactJid);
+                    BareJid bareContactJid = JidCreate.bareFrom(contactJid);
+                    return new ChatViewController(connectedUser, bareContactJid);
                 } catch (Exception e) {
                     logger.error("Error creating ChatViewController: " + e.getMessage());
                     throw new RuntimeException(e);

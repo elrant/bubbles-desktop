@@ -1,17 +1,21 @@
 package team.elrant.bubbles.xmpp;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * The User class represents a user in the XMPP system.
  * It stores the username and service name of the user.
  */
 public class User implements Serializable {
-    private String username;
-    private String serviceName;
+    private static final Logger logger = LogManager.getLogger(User.class);
+
+    private final @NotNull String username;
+    private final @NotNull String serviceName;
 
     /**
      * Constructs a User object with the specified username and service name.
@@ -19,7 +23,7 @@ public class User implements Serializable {
      * @param username    The username of the user.
      * @param serviceName The service name of the XMPP server.
      */
-    public User(String username, String serviceName) {
+    public User(@NotNull String username, @NotNull String serviceName) {
         this.username = username;
         this.serviceName = serviceName;
     }
@@ -28,18 +32,19 @@ public class User implements Serializable {
      * Loads the user information from a file and initializes a User object.
      *
      * @param filename The name of the file containing the serialized user information.
+     * @throws IOException            If an I/O error occurs while reading the file.
+     * @throws ClassNotFoundException If the class of a serialized object cannot be found.
      */
-    public User(String filename) {
+    public User(@NotNull String filename) throws IOException, ClassNotFoundException {
         try (FileInputStream fileIn = new FileInputStream(filename);
              ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
             User serializedUser = (User) objectIn.readObject();
-            System.out.println("User information loaded from " + filename);
+            logger.info("User information loaded from {}", filename);
             this.username = serializedUser.getUsername();
             this.serviceName = serializedUser.getServiceName();
         } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Error loading user information from file: " + e.getMessage());
-            this.username = "";
-            this.serviceName = "";
+            logger.error("Error loading user information from file: {}", e.getMessage());
+            throw e;
         }
     }
 
@@ -48,7 +53,7 @@ public class User implements Serializable {
      *
      * @return The username of the user.
      */
-    public String getUsername() {
+    public @NotNull String getUsername() {
         return username;
     }
 
@@ -57,7 +62,7 @@ public class User implements Serializable {
      *
      * @return The service name of the XMPP server.
      */
-    public String getServiceName() {
+    public @NotNull String getServiceName() {
         return serviceName;
     }
 }

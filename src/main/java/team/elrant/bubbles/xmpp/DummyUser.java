@@ -2,8 +2,6 @@ package team.elrant.bubbles.xmpp;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.roster.Roster;
 
 /**
@@ -30,11 +28,7 @@ public class DummyUser {
 
         // Accept every incoming subscription request
         Roster roster = user.getRoster();
-        if (roster != null) {
-            roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
-            logger.info("Subscription mode set to accept all.");
-        } else {
-            logger.error("Roster is null. Unable to set subscription mode.");
-        }
+        roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
+        logger.info("Subscription mode set to accept all.");
     }
 }

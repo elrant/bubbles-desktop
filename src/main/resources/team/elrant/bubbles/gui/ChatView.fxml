@@ -11,5 +11,5 @@
     <TextArea fx:id="chatTextArea" prefWidth="400" prefHeight="600" editable="false"/>
     <TextArea fx:id="messageTextArea" prefWidth="300" prefHeight="100" layoutY="600"/>
     <Button fx:id="sendButton" text="Send" onAction="#sendMessage" layoutY="620" layoutX="320"/>
-    <Label fx:id="failedLoginLabel" text="Failed to send message!" visible="false" textFill="red" layoutX="320" layoutY="650"/>
+    <Label fx:id="failedSendMessageLabel" text="Failed to send message!" visible="false" textFill="red" layoutX="320" layoutY="650"/>
 </AnchorPane>
