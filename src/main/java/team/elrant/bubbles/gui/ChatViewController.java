@@ -17,7 +17,8 @@ import team.elrant.bubbles.xmpp.ConnectedUser;
  */
 public class ChatViewController {
     private static final Logger logger = LogManager.getLogger(ChatViewController.class);
-
+    private final @NotNull ConnectedUser connectedUser;
+    private final @NotNull BareJid bareContactJid;
     @FXML
     private TextArea chatTextArea;
     @FXML
@@ -27,14 +28,11 @@ public class ChatViewController {
     @FXML
     private Label failedSendMessageLabel;
 
-    private final @NotNull ConnectedUser connectedUser;
-    private final @NotNull BareJid bareContactJid;
-
     /**
      * Constructs a new instance of ChatViewController with the specified connected user and contact JID.
      *
-     * @param connectedUser The connected user instance.
-     * @param bareContactJid    The JID of the contact with whom the user is communicating.
+     * @param connectedUser  The connected user instance.
+     * @param bareContactJid The JID of the contact with whom the user is communicating.
      */
     public ChatViewController(@NotNull ConnectedUser connectedUser, @NotNull BareJid bareContactJid) {
         this.connectedUser = connectedUser;
@@ -43,7 +41,7 @@ public class ChatViewController {
 
     /**
      * Initializes the chat view controller.
-     * It adds an incoming message listener to the connected user and sets up the action event for send button.
+     * It adds an incoming message listener to the connected user and sets up the action event for the "send" button.
      */
     @FXML
     protected void initialize() {
@@ -53,7 +51,7 @@ public class ChatViewController {
 
     /**
      * Sends a message to the contact and updates the chat display.
-    */
+     */
     @FXML
     protected void sendMessage() {
         try {
@@ -67,7 +65,7 @@ public class ChatViewController {
             }
         } catch (Exception e) {
             failedSendMessageLabel.setVisible(true);
-            logger.error("Error sending message: " + e.getMessage());
+            logger.error("Error sending message: {}", e.getMessage());
         }
     }
 

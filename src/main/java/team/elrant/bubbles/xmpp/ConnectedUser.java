@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat2.Chat;
@@ -21,7 +20,6 @@ import org.jxmpp.jid.impl.JidCreate;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Method;
 import java.util.function.Consumer;
 
 /**
@@ -34,6 +32,7 @@ public class ConnectedUser extends User {
     private @Nullable Roster roster;
     private @Nullable XMPPTCPConnection connection;
     private @Nullable ChatManager chatManager;
+
     /**
      * Constructs a ConnectedUser object with the specified username, password, and service name.
      *
@@ -71,15 +70,6 @@ public class ConnectedUser extends User {
 
         roster = Roster.getInstanceFor(connection);
         roster.reloadAndWait();
-
-        if (!(super.getUsername().equals("dummy") && super.getServiceName().equals("elrant.team"))) {
-            BareJid dummyJid = JidCreate.bareFrom("dummy@elrant.team");
-            if (roster != null && roster.getEntry(dummyJid) == null) {
-                addContact(dummyJid, "Dummy");
-            } else {
-                sendMessage(dummyJid, "Hello, world!");
-            }
-        }
     }
 
     /**
@@ -94,7 +84,7 @@ public class ConnectedUser extends User {
                 roster.createItemAndRequestSubscription(contactJid, nickname, null);
             }
         } catch (Exception e) {
-            logger.error("Error adding contact: " + e.getMessage());
+            logger.error("Error adding contact: {}", e.getMessage());
         }
     }
 
@@ -112,7 +102,7 @@ public class ConnectedUser extends User {
                 }
             }
         } catch (Exception e) {
-            logger.error("Error removing contact: " + e.getMessage());
+            logger.error("Error removing contact: {}", e.getMessage());
         }
     }
 
@@ -129,7 +119,7 @@ public class ConnectedUser extends User {
                 chat.send(message);
             }
         } catch (Exception e) {
-            logger.error("Error sending XMPP message: " + e.getMessage());
+            logger.error("Error sending XMPP message: {}", e.getMessage());
         }
     }
 
@@ -148,7 +138,7 @@ public class ConnectedUser extends User {
                 roster.createItemAndRequestSubscription(JidCreate.bareFrom(contactJid), nickname, null);
             }
         } catch (Exception e) {
-            logger.error("Error accepting subscription: " + e.getMessage());
+            logger.error("Error accepting subscription: {}", e.getMessage());
         }
     }
 
@@ -164,9 +154,9 @@ public class ConnectedUser extends User {
             @NotNull User userWithoutPassword = new User(super.getUsername(), super.getServiceName());
             objectOut.writeObject(userWithoutPassword);
 
-            logger.info("User information (excluding password) saved to " + filename);
+            logger.info("User information (excluding password) saved to {}", filename);
         } catch (IOException e) {
-            logger.error("Error saving user information to file: " + e.getMessage());
+            logger.error("Error saving user information to file: {}", e.getMessage());
         }
     }
 
@@ -212,7 +202,7 @@ public class ConnectedUser extends User {
     public void addIncomingMessageListener() {
         if (chatManager != null) {
             chatManager.addIncomingListener((from, message, chat) ->
-                    logger.info("Received message from " + from + ": " + message.getBody()));
+                    logger.info("Received message from {}: {}", from, message.getBody()));
         }
     }
 
@@ -220,11 +210,11 @@ public class ConnectedUser extends User {
         if (chatManager != null) {
             chatManager.addIncomingListener((from, message, chat) -> {
                 try {
-                    if(from != null && from.equals(contactJid) && message.getBody() != null){
+                    if (from != null && from.equals(contactJid) && message.getBody() != null) {
                         updateChatDisplay.accept(message.getBody());
                     }
                 } catch (Exception e) {
-                    logger.error("Error updating chat display: " + e.getMessage());
+                    logger.error("Error updating chat display: {}", e.getMessage());
                 }
             });
         }

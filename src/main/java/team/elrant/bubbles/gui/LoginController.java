@@ -5,7 +5,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,10 +26,6 @@ public class LoginController {
     @FXML
     private Button submitButton;
     @FXML
-    private AnchorPane formPane;
-    @FXML
-    private Label loginLabel;
-    @FXML
     private Label failedLoginLabel;
     @FXML
     private Label successfulLoginLabel;
@@ -44,11 +39,11 @@ public class LoginController {
     @FXML
     protected void onSubmitButtonClick() {
         try {
-            connectedUser = new ConnectedUser(username_field.getText(), password_field.getText(), "elrant.team");
+            connectedUser = new ConnectedUser(username_field.getText(), password_field.getText(), "bubbles.elrant.team");
             connectedUser.initializeConnection();
             connectedUser.saveUserToFile("user.dat");
         } catch (Exception e) {
-            logger.error("Error during login: " + e.getMessage());
+            logger.error("Error during login: {}", e.getMessage());
             failedLoginLabel.setVisible(true);
         }
         if (connectedUser != null && connectedUser.isLoggedIn()) {
@@ -87,12 +82,12 @@ public class LoginController {
     private void openChatWindow() {
         try {
             if (connectedUser != null && connectedUser.isLoggedIn()) {
-                ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, "lucadg@elrant.team");
+                ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, "lucadg@bubbles.elrant.team");
                 chatViewApplication.start(new Stage());
                 closeLoginWindow();
             }
         } catch (Exception e) {
-            logger.error("Error opening chat window: " + e.getMessage());
+            logger.error("Error opening chat window: {}", e.getMessage());
         }
     }
 }

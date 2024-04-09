@@ -27,6 +27,7 @@ public class LoginApplication extends Application {
     /**
      * The start method is called when the JavaFX application is launched.
      * It sets up the login scene, loads the LoginView.fxml file, and displays the login window.
+     *
      * @param stage The primary stage for this application, onto which the application scene can be set.
      * @throws IOException If an error occurs while loading the FXML file.
      */

@@ -34,6 +34,15 @@ public class ChatViewApplication extends Application {
     }
 
     /**
+     * The main method launches the JavaFX application.
+     *
+     * @param args The command-line arguments.
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    /**
      * The start method initializes the primary stage of the chat application.
      * It loads the ChatView.fxml layout, sets up the ChatViewController, and displays the stage.
      *
@@ -52,7 +61,7 @@ public class ChatViewApplication extends Application {
                     BareJid bareContactJid = JidCreate.bareFrom(contactJid);
                     return new ChatViewController(connectedUser, bareContactJid);
                 } catch (Exception e) {
-                    logger.error("Error creating ChatViewController: " + e.getMessage());
+                    logger.error("Error creating ChatViewController: {}", e.getMessage());
                     throw new RuntimeException(e);
                 }
             });
@@ -66,17 +75,8 @@ public class ChatViewApplication extends Application {
             primaryStage.setResizable(false);
             primaryStage.show();
         } catch (Exception e) {
-            logger.error("Error starting ChatViewApplication: " + e.getMessage());
+            logger.error("Error starting ChatViewApplication: {}", e.getMessage());
             throw e;
         }
-    }
-
-    /**
-     * The main method launches the JavaFX application.
-     *
-     * @param args The command-line arguments.
-     */
-    public static void main(String[] args) {
-        launch(args);
     }
 }
