@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * The LoginApplication class is the entry point for the login GUI application.
@@ -38,7 +39,7 @@ public class LoginApplication extends Application {
     public void start(@NotNull Stage stage) throws Exception {
         try {
             @NotNull FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LoginView.fxml"));
-            @NotNull Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+            @NotNull Scene scene = new Scene(fxmlLoader.load(), 280, 200);
             stage.setTitle("Login");
             stage.setScene(scene);
             stage.centerOnScreen();
