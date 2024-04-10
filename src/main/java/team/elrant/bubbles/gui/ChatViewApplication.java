@@ -67,7 +67,7 @@ public class ChatViewApplication extends Application {
             });
 
             AnchorPane root = fxmlLoader.load();
-            @NotNull Scene scene = new Scene(root, 400, 800);
+            @NotNull Scene scene = new Scene(root, 800, 700);
 
             primaryStage.setTitle("Chat");
             primaryStage.setScene(scene);

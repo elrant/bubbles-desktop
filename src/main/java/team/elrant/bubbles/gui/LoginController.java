@@ -82,7 +82,7 @@ public class LoginController {
     private void openChatWindow() {
         try {
             if (connectedUser != null && connectedUser.isLoggedIn()) {
-                ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, "lucadg@bubbles.elrant.team");
+                ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, "davica@bubbles.elrant.team");
                 chatViewApplication.start(new Stage());
                 closeLoginWindow();
             }
