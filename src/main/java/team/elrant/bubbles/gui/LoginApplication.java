@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -13,6 +15,7 @@ import java.io.IOException;
  * It loads the LoginView.fxml file, sets up the login scene, and displays the login window.
  */
 public class LoginApplication extends Application {
+    private static final Logger logger = LogManager.getLogger(LoginApplication.class);
 
     /**
      * The main method is the entry point of the LoginApplication.
@@ -32,13 +35,18 @@ public class LoginApplication extends Application {
      * @throws IOException If an error occurs while loading the FXML file.
      */
     @Override
-    public void start(@NotNull Stage stage) throws IOException {
-        @NotNull FXMLLoader fxmlLoader = new FXMLLoader(LoginApplication.class.getResource("LoginView.fxml"));
-        @NotNull Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Login");
-        stage.setScene(scene);
-        stage.centerOnScreen();
-        stage.setResizable(false);
-        stage.show();
+    public void start(@NotNull Stage stage) throws Exception {
+        try {
+            @NotNull FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LoginView.fxml"));
+            @NotNull Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+            stage.setTitle("Login");
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.setResizable(false);
+            stage.show();
+        } catch (Exception e) {
+            logger.error("Error starting LoginApplication: {}", e.getMessage());
+            throw e;
+        }
     }
 }
