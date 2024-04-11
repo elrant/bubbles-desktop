@@ -12,6 +12,8 @@ import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.impl.JidCreate;
 import team.elrant.bubbles.xmpp.ConnectedUser;
 
+import java.util.Objects;
+
 /**
  * The ChatViewApplication class is responsible for launching the chat application GUI.
  * It initializes the primary stage with the ChatView.fxml layout and sets up the ChatViewController.
@@ -68,7 +70,7 @@ public class ChatViewApplication extends Application {
 
             AnchorPane root = fxmlLoader.load();
             @NotNull Scene scene = new Scene(root, 800, 700);
-
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("fluent-light.css")).toExternalForm());
             primaryStage.setTitle("Chat");
             primaryStage.setScene(scene);
             primaryStage.centerOnScreen();

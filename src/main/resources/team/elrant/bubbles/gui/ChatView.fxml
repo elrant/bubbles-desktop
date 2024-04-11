@@ -2,13 +2,23 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="300.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="team.elrant.bubbles.gui.ChatViewController">
-    <TextArea fx:id="chatTextArea" editable="false" layoutX="7.0" layoutY="10.0" prefHeight="584.0" prefWidth="630.0" />
+    <TextArea fx:id="chatTextArea" editable="false" layoutX="7.0" layoutY="10.0" prefHeight="584.0" prefWidth="630.0">
+      <font>
+         <Font name="Segoe UI" size="12.0" />
+      </font></TextArea>
    <AnchorPane layoutY="600.0" prefHeight="100.0" prefWidth="800.0">
       <children>
-          <TextArea fx:id="messageTextArea" layoutX="7.0" prefHeight="94.0" prefWidth="630.0" />
-          <Button fx:id="sendButton" layoutX="643.0" layoutY="5.0" onAction="#sendMessage" prefHeight="88.0" prefWidth="149.0" text="Send" />
+          <TextArea fx:id="messageTextArea" layoutX="7.0" prefHeight="94.0" prefWidth="630.0">
+            <font>
+               <Font name="Segoe UI" size="12.0" />
+            </font></TextArea>
+          <Button fx:id="sendButton" layoutX="643.0" layoutY="5.0" onAction="#sendMessage" prefHeight="88.0" prefWidth="149.0" text="Send">
+            <font>
+               <Font name="Segoe UI Semibold" size="12.0" />
+            </font></Button>
       </children>
    </AnchorPane>
     <Label fx:id="failedSendMessageLabel" layoutX="320" layoutY="650" text="Failed to send message!" textFill="red" visible="false" />

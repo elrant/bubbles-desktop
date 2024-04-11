@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
@@ -12,21 +13,42 @@
                     <Font name="Segoe UI Semibold" size="12.0" />
                 </font>
             </Label>
-            <TextField fx:id="username_field" layoutX="78.0" layoutY="1.0" prefHeight="22.0" prefWidth="162.0" promptText="Username" />
+            <TextField fx:id="username_field" layoutX="78.0" layoutY="1.0" prefHeight="22.0" prefWidth="162.0" promptText="Username">
+            <font>
+               <Font name="Segoe UI" size="12.0" />
+            </font></TextField>
             <Label alignment="BASELINE_LEFT" layoutX="1.0" layoutY="38.0" text="Password">
                 <font>
                     <Font name="Segoe UI Semibold" size="12.0" />
                 </font>
             </Label>
-            <PasswordField fx:id="password_field" layoutX="78.0" layoutY="35.0" prefHeight="22.0" prefWidth="162.0" promptText="********" />
+            <PasswordField fx:id="password_field" layoutX="78.0" layoutY="35.0" prefHeight="22.0" prefWidth="162.0" promptText="********">
+            <font>
+               <Font name="Segoe UI" size="12.0" />
+            </font></PasswordField>
         </AnchorPane>
         <Label fx:id="loginLabel" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="-21.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="304.0" text="Login" textAlignment="CENTER">
             <font>
                 <Font name="Segoe UI Semibold" size="25.0" />
             </font>
         </Label>
-       <Button fx:id="submitButton" layoutX="208.0" layoutY="147.0" mnemonicParsing="false" onAction="#onSubmitButtonClick" text="Submit" />
+       <Button fx:id="submitButton" layoutX="208.0" layoutY="147.0" mnemonicParsing="false" onAction="#onSubmitButtonClick" text="Submit">
+         <font>
+            <Font name="Segoe UI" size="12.0" />
+         </font></Button>
+      <opaqueInsets>
+         <Insets />
+      </opaqueInsets>
     </AnchorPane>
-   <Label fx:id="failedLoginLabel" layoutX="36.0" layoutY="154.0" prefHeight="17.0" prefWidth="174.0" text="Wrong username or password!" textFill="#b50000" visible="false" />
-   <Label fx:id="successfulLoginLabel" layoutX="115.0" layoutY="154.0" text="Successful login!" textFill="#00bc00" visible="false" />
+   <Label fx:id="failedLoginLabel" layoutX="36.0" layoutY="154.0" prefHeight="17.0" prefWidth="174.0" text="Wrong username or password!" textFill="#b50000" visible="false">
+      <font>
+         <Font name="Segoe UI Black" size="12.0" />
+      </font></Label>
+   <Label fx:id="successfulLoginLabel" layoutX="115.0" layoutY="154.0" text="Successful login!" textFill="#00bc00" visible="false">
+      <font>
+         <Font name="Segoe UI Black" size="12.0" />
+      </font></Label>
+   <opaqueInsets>
+      <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+   </opaqueInsets>
 </Pane>

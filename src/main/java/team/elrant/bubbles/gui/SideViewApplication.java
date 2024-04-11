@@ -9,6 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class SideViewApplication extends Application {
 
     private static final Logger logger = LogManager.getLogger(SideViewApplication.class);
@@ -30,7 +32,7 @@ public class SideViewApplication extends Application {
             @NotNull FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SideView.fxml"));
             AnchorPane root = fxmlLoader.load();
             @NotNull Scene scene = new Scene(root, 320, 720);
-
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("fluent-light.css")).toExternalForm());
             primaryStage.setTitle("Chat");
             primaryStage.setScene(scene);
             primaryStage.centerOnScreen();
