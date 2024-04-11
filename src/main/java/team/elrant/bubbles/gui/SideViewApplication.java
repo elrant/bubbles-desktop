@@ -33,7 +33,7 @@ public class SideViewApplication extends Application {
             AnchorPane root = fxmlLoader.load();
             @NotNull Scene scene = new Scene(root, 320, 720);
             scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("fluent-light.css")).toExternalForm());
-            primaryStage.setTitle("Chat");
+            stage.setTitle("Sidebar");
             primaryStage.setScene(scene);
             primaryStage.centerOnScreen();
             primaryStage.setResizable(false);
@@ -44,3 +44,5 @@ public class SideViewApplication extends Application {
         }
     }
 }
+
+        
