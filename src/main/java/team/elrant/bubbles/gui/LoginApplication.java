@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -39,9 +38,9 @@ public class LoginApplication extends Application {
     @Override
     public void start(@NotNull Stage stage) throws Exception {
         try {
-            @NotNull FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LoginView.fxml"));
+            @NotNull FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("views/LoginView.fxml"));
             @NotNull Scene scene = new Scene(fxmlLoader.load(), 280, 200);
-            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("fluent-light.css")).toExternalForm());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styling/fluent-light.css")).toExternalForm());
             stage.setTitle("Login");
             stage.setScene(scene);
             stage.centerOnScreen();

@@ -29,10 +29,10 @@ public class SideViewApplication extends Application {
     @Override
     public void start(@NotNull Stage primaryStage) throws Exception {
         try {
-            @NotNull FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SideView.fxml"));
+            @NotNull FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("views/SideView.fxml"));
             AnchorPane root = fxmlLoader.load();
             @NotNull Scene scene = new Scene(root, 320, 720);
-            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("fluent-light.css")).toExternalForm());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styling/fluent-light.css")).toExternalForm());
             primaryStage.setTitle("Chat");
             primaryStage.setScene(scene);
             primaryStage.centerOnScreen();

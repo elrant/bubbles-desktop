@@ -54,7 +54,7 @@ public class ChatViewApplication extends Application {
     @Override
     public void start(@NotNull Stage primaryStage) throws Exception {
         try {
-            @NotNull FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ChatView.fxml"));
+            @NotNull FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("views/ChatView.fxml"));
 
             // Set custom controller factory
             fxmlLoader.setControllerFactory(param -> {
@@ -70,7 +70,7 @@ public class ChatViewApplication extends Application {
 
             AnchorPane root = fxmlLoader.load();
             @NotNull Scene scene = new Scene(root, 800, 700);
-            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("fluent-light.css")).toExternalForm());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styling/fluent-light.css")).toExternalForm());
             primaryStage.setTitle("Chat");
             primaryStage.setScene(scene);
             primaryStage.centerOnScreen();
