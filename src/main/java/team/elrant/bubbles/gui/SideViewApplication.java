@@ -23,11 +23,11 @@ public class SideViewApplication extends Application {
      * The start method initializes the primary stage of the chat application.
      * It loads the SideView.fxml layout and displays the stage.
      *
-     * @param primaryStage The primary stage of the application.
+     * @param stage The primary stage of the application.
      * @throws Exception If an error occurs during the initialization.
      */
     @Override
-    public void start(@NotNull Stage primaryStage) throws Exception {
+    public void start(@NotNull Stage stage) throws Exception {
         try {
             @NotNull FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("views/SideView.fxml"));
             AnchorPane root = fxmlLoader.load();
@@ -44,3 +44,5 @@ public class SideViewApplication extends Application {
         }
     }
 }
+
+        
