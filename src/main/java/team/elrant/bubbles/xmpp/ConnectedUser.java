@@ -40,7 +40,7 @@ public class ConnectedUser extends User {
      * @param password    The password of the user.
      * @param serviceName The service name of the XMPP server.
      */
-    public ConnectedUser(@NotNull String username, @NotNull String password, @NotNull String serviceName) {
+    public ConnectedUser(@NotNull String username, @NotNull String password, @NotNull String serviceName) throws IOException, ClassNotFoundException {
         super(username, serviceName);
         this.password = password;
     }
@@ -159,7 +159,7 @@ public class ConnectedUser extends User {
             }
 
             logger.info("User information (excluding password) saved to {}", filename);
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             logger.error("Error saving user information to file: {}", e.getMessage());
         }
     }
