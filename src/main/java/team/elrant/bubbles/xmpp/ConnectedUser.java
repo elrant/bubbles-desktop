@@ -147,12 +147,16 @@ public class ConnectedUser extends User {
      *
      * @param filename The name of the file to save the user information to.
      */
-    public void saveUserToFile(@NotNull String filename) {
+    public void saveUserToFile(@NotNull String filename, boolean savePassword) {
         try (@NotNull FileOutputStream fileOut = new FileOutputStream(filename);
              @NotNull ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
 
-            @NotNull User userWithoutPassword = new User(super.getUsername(), super.getServiceName());
-            objectOut.writeObject(userWithoutPassword);
+            if (savePassword)
+                objectOut.writeObject(this);
+            else {
+                @NotNull User userToFile = new User(super.getUsername(), super.getServiceName());
+                objectOut.writeObject(userToFile);
+            }
 
             logger.info("User information (excluding password) saved to {}", filename);
         } catch (IOException e) {

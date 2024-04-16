@@ -3,6 +3,7 @@ package team.elrant.bubbles.xmpp;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -18,6 +19,7 @@ public class User implements Serializable {
 
     private final @NotNull String username;
     private final @NotNull String serviceName;
+    private final @Nullable String password;
 
     /**
      * Constructs a User object with the specified username and service name.
@@ -25,9 +27,11 @@ public class User implements Serializable {
      * @param username    The username of the user.
      * @param serviceName The service name of the XMPP server.
      */
-    public User(@NotNull String username, @NotNull String serviceName) {
+
+    public User(@NotNull String username, @NotNull String serviceName, @NotNull String password) {
         this.username = username;
         this.serviceName = serviceName;
+        this.password = password;
     }
 
     /**
@@ -37,7 +41,8 @@ public class User implements Serializable {
      * @throws IOException            If an I/O error occurs while reading the file.
      * @throws ClassNotFoundException If the class of a serialized object cannot be found.
      */
-    public User(@NotNull String filename) throws IOException, ClassNotFoundException {
+    public User(@NotNull String filename, @NotNull String password) throws IOException, ClassNotFoundException {
+        this.password = password;
         try (FileInputStream fileIn = new FileInputStream(filename);
              ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
             User serializedUser = (User) objectIn.readObject();

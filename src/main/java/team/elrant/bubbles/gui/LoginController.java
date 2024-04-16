@@ -1,10 +1,7 @@
 package team.elrant.bubbles.gui;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,6 +26,8 @@ public class LoginController {
     private Label failedLoginLabel;
     @FXML
     private Label successfulLoginLabel;
+    @FXML
+    private CheckBox rememberPassword;
     private @Nullable ConnectedUser connectedUser;
 
 
@@ -41,7 +40,7 @@ public class LoginController {
         try {
             connectedUser = new ConnectedUser(username_field.getText(), password_field.getText(), "bubbles.elrant.team");
             connectedUser.initializeConnection();
-            connectedUser.saveUserToFile("user.dat");
+            connectedUser.saveUserToFile("user.dat", rememberPassword.isSelected());
         } catch (Exception e) {
             logger.error("Error during login: {}", e.getMessage());
             failedLoginLabel.setVisible(true);
