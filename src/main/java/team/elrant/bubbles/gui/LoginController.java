@@ -58,7 +58,7 @@ public class LoginController {
     @FXML
     public void initialize() {
         try {
-            User userFromFile = new User("user.dat", "");
+            User userFromFile = new User("user.dat");
             if (!userFromFile.getUsername().isEmpty()) {
                 username_field.setText(userFromFile.getUsername());
             }

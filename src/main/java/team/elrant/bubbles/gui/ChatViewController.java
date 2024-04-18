@@ -1,6 +1,5 @@
 package team.elrant.bubbles.gui;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -75,6 +74,6 @@ public class ChatViewController {
      * @param message The incoming message to display.
      */
     private void updateChatDisplay(@NotNull String message) {
-        Platform.runLater(() -> chatTextArea.appendText(bareContactJid + ": " + message + "\n"));
+        chatTextArea.appendText(bareContactJid + ": " + message + "\n");
     }
 }

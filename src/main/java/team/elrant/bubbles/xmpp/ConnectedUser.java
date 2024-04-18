@@ -40,7 +40,7 @@ public class ConnectedUser extends User {
      * @param password    The password of the user.
      * @param serviceName The service name of the XMPP server.
      */
-    public ConnectedUser(@NotNull String username, @NotNull String password, @NotNull String serviceName) throws IOException, ClassNotFoundException {
+    public ConnectedUser(@NotNull String username, @NotNull String password, @NotNull String serviceName) {
         super(username, serviceName);
         this.password = password;
     }
@@ -78,7 +78,7 @@ public class ConnectedUser extends User {
      * @param contactJid The JID of the contact to add (user@service.name).
      * @param nickname   The user-defined nickname of the contact, defaults to the contact's username.
      */
-    private void addContact(@NotNull BareJid contactJid, @Nullable String nickname) {
+    public void addContact(@NotNull BareJid contactJid, @Nullable String nickname) {
         try {
             if (roster != null && !roster.contains(contactJid)) {
                 roster.createItemAndRequestSubscription(contactJid, nickname, null);
@@ -159,7 +159,7 @@ public class ConnectedUser extends User {
             }
 
             logger.info("User information (excluding password) saved to {}", filename);
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             logger.error("Error saving user information to file: {}", e.getMessage());
         }
     }
@@ -203,24 +203,10 @@ public class ConnectedUser extends User {
     /**
      * Adds an incoming message listener to the chat manager.
      */
-    public void addIncomingMessageListener() {
-        if (chatManager != null) {
-            chatManager.addIncomingListener((from, message, chat) ->
-                    logger.info("Received message from {}: {}", from, message.getBody()));
-        }
-    }
-
     public void addIncomingMessageListener(BareJid contactJid, Consumer<String> updateChatDisplay) {
         if (chatManager != null) {
-            chatManager.addIncomingListener((from, message, chat) -> {
-                try {
-                    if (from != null && from.equals(contactJid) && message.getBody() != null) {
-                        updateChatDisplay.accept(message.getBody());
-                    }
-                } catch (Exception e) {
-                    logger.error("Error updating chat display: {}", e.getMessage());
-                }
-            });
+            ChatListener chatListener = new ChatListener(contactJid, updateChatDisplay);
+            chatManager.addIncomingListener(chatListener);
         }
     }
 }
