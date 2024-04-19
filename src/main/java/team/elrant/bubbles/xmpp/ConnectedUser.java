@@ -17,9 +17,7 @@ import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.function.Consumer;
 
 /**
@@ -28,7 +26,7 @@ import java.util.function.Consumer;
  */
 public class ConnectedUser extends User {
     private static final Logger logger = LogManager.getLogger(ConnectedUser.class);
-    private final @NotNull String password;
+    private final @Nullable String password;
     private @Nullable Roster roster;
     private @Nullable XMPPTCPConnection connection;
     private @Nullable ChatManager chatManager;
@@ -43,6 +41,33 @@ public class ConnectedUser extends User {
     public ConnectedUser(@NotNull String username, @NotNull String password, @NotNull String serviceName) {
         super(username, serviceName);
         this.password = password;
+    }
+
+
+    /**
+     * Load a new Connected user from a file.
+     *
+     * @param filename the filename
+     *
+     * @throws IOException            the io exception
+     * @throws ClassNotFoundException the class not found exception
+     */
+    public ConnectedUser(@NotNull String filename) throws IOException, ClassNotFoundException {
+        super("uninit", "uninit"); //initialize after read file
+        try (FileInputStream fileIn = new FileInputStream(filename);
+             ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
+            ConnectedUser serializedUser = (ConnectedUser) objectIn.readObject();
+            logger.info("User information loaded from {}", filename);
+            super.username = serializedUser.getUsername();
+            super.serviceName = serializedUser.getServiceName();
+            if (serializedUser.getPassword().equals("uninit"))
+                this.password = "";
+            else
+                this.password = serializedUser.getPassword();
+        } catch (IOException | ClassNotFoundException e) {
+            logger.error("Error loading user information from file: {}", e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -87,6 +112,7 @@ public class ConnectedUser extends User {
             logger.error("Error adding contact: {}", e.getMessage());
         }
     }
+
 
     /**
      * Removes a contact from the user's roster.
@@ -148,14 +174,17 @@ public class ConnectedUser extends User {
      * @param filename The name of the file to save the user information to.
      */
     public void saveUserToFile(@NotNull String filename, boolean savePassword) {
+        File file = new File("user.dat");
+        file.delete();
+
         try (@NotNull FileOutputStream fileOut = new FileOutputStream(filename);
              @NotNull ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
 
             if (savePassword)
-                objectOut.writeObject(this);
+                objectOut.writeObject(new ConnectedUser(this.getUsername(), this.getPassword(), this.getServiceName()));
             else {
-                @NotNull User userToFile = new User(super.getUsername(), super.getServiceName());
-                objectOut.writeObject(userToFile);
+                ConnectedUser user = new ConnectedUser(this.getUsername(), "uninit", this.getServiceName());
+                objectOut.writeObject(user);
             }
 
             logger.info("User information (excluding password) saved to {}", filename);
@@ -176,6 +205,10 @@ public class ConnectedUser extends User {
         } else {
             throw new IllegalStateException("Roster is not initialized.");
         }
+    }
+
+    public String getPassword(){
+        return password;
     }
 
     /**

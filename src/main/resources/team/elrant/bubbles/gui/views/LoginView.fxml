@@ -13,7 +13,7 @@
                     <Font name="Segoe UI Semibold" size="12.0" />
                 </font>
             </Label>
-            <TextField fx:id="username_field" layoutX="78.0" layoutY="1.0" prefHeight="22.0" prefWidth="162.0" promptText="Username">
+            <TextField fx:id="username_field" layoutX="78.0" layoutY="1.0" prefHeight="22.0" prefWidth="162.0" promptText="MarioRossi">
                 <font>
                     <Font name="Segoe UI" size="12.0" />
                 </font>
@@ -23,16 +23,21 @@
                     <Font name="Segoe UI Semibold" size="12.0" />
                 </font>
             </Label>
-            <PasswordField fx:id="password_field" layoutX="78.0" layoutY="35.0" prefHeight="22.0" prefWidth="162.0" promptText="********">
+            <PasswordField fx:id="password_field_hidden" layoutX="78.0" layoutY="35.0" prefHeight="22.0" prefWidth="138.0" promptText="********">
                 <font>
                     <Font name="Segoe UI" size="12.0" />
                 </font>
             </PasswordField>
+            <TextField fx:id="password_field_visible" layoutX="78.0" layoutY="35.0" prefHeight="22.0" prefWidth="138.0" promptText="********" visible="false">
+            <font>
+               <Font name="Segoe UI" size="12.0" />
+            </font></TextField>
          <CheckBox fx:id="rememberPassword" layoutX="95.0" layoutY="64.0" mnemonicParsing="false" text="Remember password">
             <font>
                <Font name="Segoe UI Light" size="12.0" />
             </font>
          </CheckBox>
+         <CheckBox fx:id="seePasswordCheckbox" layoutX="223.0" layoutY="38.0" mnemonicParsing="false" onAction="#onSeePasswordCheckBoxClick" prefHeight="17.0" prefWidth="8.0" />
         </AnchorPane>
         <Label fx:id="loginLabel" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="-21.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="304.0" text="Login" textAlignment="CENTER">
             <font>

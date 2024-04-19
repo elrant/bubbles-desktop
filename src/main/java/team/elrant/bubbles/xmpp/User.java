@@ -17,9 +17,8 @@ import java.io.Serializable;
 public class User implements Serializable {
     private static final Logger logger = LogManager.getLogger(User.class);
 
-    private final @NotNull String username;
-    private final @NotNull String serviceName;
-    private final @Nullable String password;
+    public @NotNull String username;
+    public @NotNull String serviceName;
 
     /**
      * Constructs a User object with the specified username and service name.
@@ -28,10 +27,9 @@ public class User implements Serializable {
      * @param serviceName The service name of the XMPP server.
      */
 
-    public User(@NotNull String username, @NotNull String serviceName, @NotNull String password) {
+    public User(@NotNull String username, @NotNull String serviceName) {
         this.username = username;
         this.serviceName = serviceName;
-        this.password = password;
     }
 
     /**
@@ -41,19 +39,6 @@ public class User implements Serializable {
      * @throws IOException            If an I/O error occurs while reading the file.
      * @throws ClassNotFoundException If the class of a serialized object cannot be found.
      */
-    public User(@NotNull String filename, @NotNull String password) throws IOException, ClassNotFoundException {
-        this.password = password;
-        try (FileInputStream fileIn = new FileInputStream(filename);
-             ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
-            User serializedUser = (User) objectIn.readObject();
-            logger.info("User information loaded from {}", filename);
-            this.username = serializedUser.getUsername();
-            this.serviceName = serializedUser.getServiceName();
-        } catch (IOException | ClassNotFoundException e) {
-            logger.error("Error loading user information from file: {}", e.getMessage());
-            throw e;
-        }
-    }
 
     /**
      * Retrieves the username of the user.

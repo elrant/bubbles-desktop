@@ -33,11 +33,11 @@ public class SideViewApplication extends Application {
             AnchorPane root = fxmlLoader.load();
             @NotNull Scene scene = new Scene(root, 320, 720);
             scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styling/fluent-light.css")).toExternalForm());
-            primaryStage.setTitle("Chat");
-            primaryStage.setScene(scene);
-            primaryStage.centerOnScreen();
-            primaryStage.setResizable(false);
-            primaryStage.show();
+            stage.setTitle("Chat");
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.setResizable(false);
+            stage.show();
         } catch (Exception e) {
             logger.error("Error starting SideViewApplication: {}", e.getMessage());
             throw e;
