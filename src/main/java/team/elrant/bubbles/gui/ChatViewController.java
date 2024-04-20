@@ -1,14 +1,19 @@
 package team.elrant.bubbles.gui;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jxmpp.jid.BareJid;
 import team.elrant.bubbles.xmpp.ConnectedUser;
+
+import java.security.Key;
 
 /**
  * The ChatViewController class controls the chat view functionality in the GUI.
@@ -44,8 +49,21 @@ public class ChatViewController {
      */
     @FXML
     protected void initialize() {
+        chatTextArea.setStyle("-fx-background-color: Black;");
+        messageTextArea.setStyle("-fx-background-color: Black;");
         connectedUser.addIncomingMessageListener(bareContactJid, this::updateChatDisplay);
-        sendButton.setOnAction(event -> sendMessage());
+        messageTextArea.setOnKeyPressed(event ->{
+            if(event.getCode() == KeyCode.ENTER) //when Enter is pressed, call sendMessage
+                sendMessage();
+        });
+        sendButton.setOnKeyPressed(event -> sendMessage()); //call sendMessage when button is pressed
+        chatTextArea.setOnKeyPressed(event ->{
+            if(event.getCode() == KeyCode.ENTER) //when Enter is pressed, call sendMessage
+                sendMessage();
+        });
+        messageTextArea.setWrapText(true);
+        chatTextArea.setEditable(false);
+        chatTextArea.setWrapText(true);
     }
 
     /**
@@ -74,6 +92,6 @@ public class ChatViewController {
      * @param message The incoming message to display.
      */
     private void updateChatDisplay(@NotNull String message) {
-        chatTextArea.appendText(bareContactJid + ": " + message + "\n");
+        chatTextArea.appendText("\n" + bareContactJid + ": " + message + "\n");
     }
 }
