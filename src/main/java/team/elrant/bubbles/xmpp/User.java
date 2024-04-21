@@ -15,9 +15,8 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
     private static final Logger logger = LogManager.getLogger(User.class);
-
-    private final @NotNull String username;
-    private final @NotNull String serviceName;
+    public @NotNull String username;
+    public @NotNull String serviceName;
 
     /**
      * Constructs a User object with the specified username and service name.
