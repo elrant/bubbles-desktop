@@ -3,7 +3,6 @@ package team.elrant.bubbles.xmpp;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,7 +15,6 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
     private static final Logger logger = LogManager.getLogger(User.class);
-
     public @NotNull String username;
     public @NotNull String serviceName;
 
@@ -39,6 +37,18 @@ public class User implements Serializable {
      * @throws IOException            If an I/O error occurs while reading the file.
      * @throws ClassNotFoundException If the class of a serialized object cannot be found.
      */
+    public User(@NotNull String filename) throws IOException, ClassNotFoundException {
+        try (FileInputStream fileIn = new FileInputStream(filename);
+             ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
+            User serializedUser = (User) objectIn.readObject();
+            logger.info("User information loaded from {}", filename);
+            this.username = serializedUser.getUsername();
+            this.serviceName = serializedUser.getServiceName();
+        } catch (IOException | ClassNotFoundException e) {
+            logger.error("Error loading user information from file: {}", e.getMessage());
+            throw e;
+        }
+    }
 
     /**
      * Retrieves the username of the user.

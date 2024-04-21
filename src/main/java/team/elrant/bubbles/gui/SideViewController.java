@@ -10,6 +10,5 @@ import org.apache.logging.log4j.Logger;
  */
 public class SideViewController {
     private static final Logger logger = LogManager.getLogger(SideViewController.class);
-
-
+    // Unimplemented class
 }
