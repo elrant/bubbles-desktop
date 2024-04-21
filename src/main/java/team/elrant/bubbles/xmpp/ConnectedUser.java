@@ -207,12 +207,8 @@ public class ConnectedUser extends User {
         }
     }
 
-    public String getPassword(){
-        return password;
-    }
-
     /**
-     * Checks if the user is currently logged in.
+     * Checks if the user is currently logged in.>>>>>>> main
      *
      * @return true if the user is logged in, otherwise false.
      */
