@@ -1,5 +1,7 @@
 package team.elrant.bubbles.xmpp;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.PasswordField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -60,10 +62,7 @@ public class ConnectedUser extends User {
             logger.info("User information loaded from {}", filename);
             super.username = serializedUser.getUsername();
             super.serviceName = serializedUser.getServiceName();
-            if (serializedUser.getPassword().equals("uninit"))
-                this.password = "";
-            else
-                this.password = serializedUser.getPassword();
+            this.password = serializedUser.getPassword();
         } catch (IOException | ClassNotFoundException e) {
             logger.error("Error loading user information from file: {}", e.getMessage());
             throw e;
@@ -205,6 +204,32 @@ public class ConnectedUser extends User {
         } else {
             throw new IllegalStateException("Roster is not initialized.");
         }
+    }
+
+    private String getPassword (){
+        return password;
+    }
+
+
+    /**
+     * Sets password field.
+     *
+     * @param pwField the fxml password field
+     */
+    public void setPasswordField (PasswordField pwField) {
+        pwField.setText(this.getPassword());
+    }
+
+    /**
+     * Checks if the password is uninitialized
+     *
+     * @return true if the password in uninitialized, false if it isn't
+     */
+    public boolean passwordUnInit() {
+        if (this.getPassword().equals("uninit"))
+            return true;
+        else
+            return false;
     }
 
     /**

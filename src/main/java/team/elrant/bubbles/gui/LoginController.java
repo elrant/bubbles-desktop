@@ -3,6 +3,7 @@ package team.elrant.bubbles.gui;
 import javafx.fxml.FXML;
 import javafx.scene.AccessibleRole;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +35,8 @@ public class LoginController {
     @FXML
     private CheckBox seePasswordCheckbox;
     private @Nullable ConnectedUser connectedUser;
+
+    final String contact = "testuser";
 
 
     /**
@@ -83,12 +86,21 @@ public class LoginController {
             if (!userFromFile.getUsername().equals("uninit")) {
                 username_field.setText(userFromFile.getUsername());
             }
-            if (!userFromFile.getPassword().equals("uninit")){
-                password_field_hidden.setText(userFromFile.getPassword());
+            if (!userFromFile.passwordUnInit()){
+                userFromFile.setPasswordField(password_field_hidden);
+                rememberPassword.setSelected(true);
             }
         } catch (Exception ignored) {
             logger.warn("Failed to load user information from file.");
         }
+        password_field_hidden.setOnKeyPressed(event ->{
+            if(event.getCode() == KeyCode.ENTER) //when Enter is pressed, call sendMessage
+                onSubmitButtonClick();
+        });
+        password_field_visible.setOnKeyPressed(event ->{
+            if(event.getCode() == KeyCode.ENTER) //when Enter is pressed, call sendMessage
+                onSubmitButtonClick();
+        });
     }
 
     /**
@@ -105,7 +117,7 @@ public class LoginController {
     private void openChatWindow() {
         try {
             if (connectedUser != null && connectedUser.isLoggedIn()) {
-                ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, "davica@bubbles.elrant.team");
+                ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, contact+"@bubbles.elrant.team");
                 chatViewApplication.start(new Stage());
                 closeLoginWindow();
             }
