@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import team.elrant.bubbles.xmpp.ConnectedUser;
@@ -34,7 +35,7 @@ public class SideViewController {
     @FXML
     public void initialize() {
         Roster roster = ConnectedUser.getRoster();
-        Set<RosterEntry> rosterEntries = roster.getEntries();
+        Set <RosterEntry> rosterEntries = roster.getEntries();
         for (RosterEntry entry : rosterEntries) {
             String jid = entry.getJid().toString();
             String[] parts = jid.split("@");
@@ -52,7 +53,7 @@ public class SideViewController {
             Label userName = new Label(user.getUsername());
 
             // Add event handler to open ChatPage
-            userName.setOnMouseClicked(event -> openChatPage(user));
+            userName.setOnMouseClicked(event -> openChatPage(username));
 
             userItem.getChildren().addAll(userName);
             userList.getChildren().add(userItem);
@@ -60,9 +61,10 @@ public class SideViewController {
     }
 
     // Method to open ChatPage
-    private void openChatPage(User user) {
+    private void openChatPage(String username) {
         try {
-            ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, user.getUsername());
+            ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, username);
+            chatViewApplication.start(new Stage());
         } catch (Exception e) {
             logger.error("Error opening chat window: {}", e.getMessage());
         }
