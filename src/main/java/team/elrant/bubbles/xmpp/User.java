@@ -67,4 +67,9 @@ public class User implements Serializable {
     public @NotNull String getServiceName() {
         return serviceName;
     }
+
+    public String getProfilePictureUrl() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getProfilePictureUrl'");
+    }
 }

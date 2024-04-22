@@ -8,12 +8,18 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import team.elrant.bubbles.xmpp.ConnectedUser;
 
 import java.util.Objects;
 
 public class SideViewApplication extends Application {
 
     private static final Logger logger = LogManager.getLogger(SideViewApplication.class);
+    private ConnectedUser connectedUser;
+
+    public SideViewApplication(ConnectedUser connectedUser) {
+        this.connectedUser = connectedUser;
+    }
 
     public static void main(String[] args) {
         launch(args);
@@ -28,21 +34,19 @@ public class SideViewApplication extends Application {
      */
     @Override
     public void start(@NotNull Stage stage) throws Exception {
-        try {
-            @NotNull FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("views/SideView.fxml"));
-            AnchorPane root = fxmlLoader.load();
-            @NotNull Scene scene = new Scene(root, 320, 720);
-            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styling/fluent-light.css")).toExternalForm());
-            stage.setTitle("Chat");
-            stage.setScene(scene);
-            stage.centerOnScreen();
-            stage.setResizable(false);
-            stage.show();
-        } catch (Exception e) {
-            logger.error("Error starting SideViewApplication: {}", e.getMessage());
-            throw e;
-        }
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("views/SideView.fxml"));
+        AnchorPane root = fxmlLoader.load();
+
+        // Pass the connectedUser to the controller
+        SideViewController controller = fxmlLoader.getController();
+        controller.setConnectedUser(connectedUser);
+
+        Scene scene = new Scene(root, 320, 720);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styling/fluent-light.css")).toExternalForm());
+        stage.setTitle("Chat");
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.setResizable(false);
+        stage.show();
     }
 }
-
-        

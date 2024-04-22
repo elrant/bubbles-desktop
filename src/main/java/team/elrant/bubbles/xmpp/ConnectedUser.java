@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 public class ConnectedUser extends User {
     private static final Logger logger = LogManager.getLogger(ConnectedUser.class);
     private final @Nullable String password;
-    private @Nullable Roster roster;
+    private static @Nullable Roster roster;
     private @Nullable XMPPTCPConnection connection;
     private @Nullable ChatManager chatManager;
 
@@ -198,7 +198,7 @@ public class ConnectedUser extends User {
      * @return The roster of the connected user.
      * @throws IllegalStateException if the roster is not initialized.
      */
-    public @NotNull Roster getRoster() {
+    public static @NotNull Roster getRoster() {
         if (roster != null) {
             return roster;
         } else {
