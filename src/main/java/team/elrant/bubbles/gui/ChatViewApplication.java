@@ -12,6 +12,7 @@ import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.impl.JidCreate;
 import team.elrant.bubbles.xmpp.ConnectedUser;
 
+import java.io.File;
 import java.util.Objects;
 
 /**
@@ -67,7 +68,6 @@ public class ChatViewApplication extends Application {
                     throw new RuntimeException(e);
                 }
             });
-
             AnchorPane root = fxmlLoader.load();
             @NotNull Scene scene = new Scene(root, 800, 700);
             scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styling/fluent-light.css")).toExternalForm());
@@ -76,6 +76,15 @@ public class ChatViewApplication extends Application {
             stage.centerOnScreen();
             stage.setResizable(false);
             stage.show();
+            stage.setOnCloseRequest(windowEvent -> {
+                try {
+                    ChatViewController chatViewController = fxmlLoader.getController();
+                    chatViewController.saveMessage();
+                }
+                catch (Exception e){
+                    logger.error("Error: {}",e.getMessage());
+                }
+            });
         } catch (Exception e) {
             logger.error("Error starting ChatViewApplication: {}", e.getMessage());
             throw e;

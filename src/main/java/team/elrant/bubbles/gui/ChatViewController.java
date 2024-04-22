@@ -13,7 +13,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jxmpp.jid.BareJid;
 import team.elrant.bubbles.xmpp.ConnectedUser;
 
+import java.io.*;
 import java.security.Key;
+import java.util.StringTokenizer;
 
 /**
  * The ChatViewController class controls the chat view functionality in the GUI.
@@ -51,6 +53,9 @@ public class ChatViewController {
     protected void initialize() {
         chatTextArea.setStyle("-fx-background-color: Black;");
         messageTextArea.setStyle("-fx-background-color: Black;");
+        if(verifyFile() != 0){
+            readFromFile();
+        }
         connectedUser.addIncomingMessageListener(bareContactJid, this::updateChatDisplay);
         messageTextArea.setOnKeyPressed(event ->{
             if(event.getCode() == KeyCode.ENTER) //when Enter is pressed, call sendMessage
@@ -64,8 +69,45 @@ public class ChatViewController {
         messageTextArea.setWrapText(true);
         chatTextArea.setEditable(false);
         chatTextArea.setWrapText(true);
+
     }
 
+    protected int verifyFile(){
+        File file = new File("saveMessage.txt");
+        return (int)file.length();
+    }
+
+    protected void saveMessage(){
+        try {
+            FileWriter f = new FileWriter("saveMessage.txt",false);
+            PrintWriter file = new PrintWriter(f);
+            file.println(chatTextArea.getText() + ";");
+            f.flush();
+            f.close();
+        }
+        catch (IOException e){
+            logger.error("Error To Save Message");
+        }
+    }
+    protected void readFromFile(){ //Read from file and add to chatAreaText
+        try {
+            String line;
+            FileReader f = new FileReader("saveMessage.txt");
+            BufferedReader file = new BufferedReader(f);
+            StringTokenizer tokenizer;
+            String string = file.readLine();
+            while (string != null){
+                tokenizer = new StringTokenizer(string,";");
+                line = "\n" + tokenizer.nextToken();
+                chatTextArea.appendText(string);
+                string = file.readLine();
+            }
+            f.close();
+        }
+        catch (IOException e){
+            logger.error("Error To Read From File");
+        }
+    }
     /**
      * Sends a message to the contact and updates the chat display.
      */
