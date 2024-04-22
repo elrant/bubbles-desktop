@@ -18,7 +18,7 @@
                     <Font name="Segoe UI" size="12.0" />
                 </font>
             </TextField>
-            <Label alignment="BASELINE_LEFT" layoutX="1.0" layoutY="38.0" text="Password">
+            <Label alignment="BASELINE_LEFT" layoutX="1.0" layoutY="38.0" text="Mario Rossi">
                 <font>
                     <Font name="Segoe UI Semibold" size="12.0" />
                 </font>

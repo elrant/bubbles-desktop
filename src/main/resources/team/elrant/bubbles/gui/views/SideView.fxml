@@ -25,5 +25,6 @@
           </Menu>
         </menus>
       </MenuBar>
+      <VBox fx:id="userList" layoutY="30.0" prefHeight="690.0" prefWidth="320.0" />
    </children>
 </AnchorPane>

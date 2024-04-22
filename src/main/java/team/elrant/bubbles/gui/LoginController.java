@@ -1,7 +1,6 @@
 package team.elrant.bubbles.gui;
 
 import javafx.fxml.FXML;
-import javafx.scene.AccessibleRole;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -11,10 +10,8 @@ import org.jetbrains.annotations.Nullable;
 import team.elrant.bubbles.xmpp.ConnectedUser;
 import team.elrant.bubbles.xmpp.User;
 
-/**
- * The LoginController class controls the login functionality in the GUI.
- * It handles user authentication and navigation to the main application.
- */
+import java.util.Set;
+
 public class LoginController {
     private static final Logger logger = LogManager.getLogger(LoginController.class);
 
@@ -38,11 +35,6 @@ public class LoginController {
 
     final String contact = "testuser";
 
-
-    /**
-     * Handles the action when submit button is clicked.
-     * It attempts to log in the user using the provided credentials and navigates to the main application upon successful login.
-     */
     @FXML
     protected void onSubmitButtonClick() {
         try {
@@ -58,12 +50,12 @@ public class LoginController {
         }
         if (connectedUser != null && connectedUser.isLoggedIn()) {
             successfulLoginLabel.setVisible(true);
-            openChatWindow();
+            openSideView();
         }
     }
 
     @FXML
-    protected void onSeePasswordCheckBoxClick (){
+    protected void onSeePasswordCheckBoxClick() {
         if (seePasswordCheckbox.isSelected()) {
             password_field_hidden.setVisible(false);
             password_field_visible.setText(password_field_hidden.getText());
@@ -75,10 +67,6 @@ public class LoginController {
         }
     }
 
-    /**
-     * Initializes the login form.
-     * It loads the username from a file and populates the username field, if available.
-     */
     @FXML
     public void initialize() {
         try {
@@ -86,44 +74,49 @@ public class LoginController {
             if (!userFromFile.getUsername().equals("uninit")) {
                 username_field.setText(userFromFile.getUsername());
             }
-            if (!userFromFile.passwordUnInit()){
+            if (!userFromFile.passwordUnInit()) {
                 userFromFile.setPasswordField(password_field_hidden);
                 rememberPassword.setSelected(true);
             }
         } catch (Exception ignored) {
             logger.warn("Failed to load user information from file.");
         }
-        password_field_hidden.setOnKeyPressed(event ->{
-            if(event.getCode() == KeyCode.ENTER) //when Enter is pressed, call onSubmitButton
+        password_field_hidden.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER)
                 onSubmitButtonClick();
         });
-        password_field_visible.setOnKeyPressed(event ->{
-            if(event.getCode() == KeyCode.ENTER) //when Enter is pressed, call onSubmitButton
+        password_field_visible.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER)
                 onSubmitButtonClick();
         });
-        username_field.setOnKeyPressed(event ->{
-            if(event.getCode() == KeyCode.ENTER) //when Enter is pressed, call onSubmitButton
+        username_field.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER)
                 onSubmitButtonClick();
         });
     }
 
-    /**
-     * Closes the login window.
-     */
     private void closeLoginWindow() {
         Stage stage = (Stage) submitButton.getScene().getWindow();
         stage.close();
     }
 
-    /**
-     * Opens the chat window.
-     */
-    private void openChatWindow() {
+    private void openSideView() {
+        try {
+            SideViewApplication sideViewApplication = new SideViewApplication(connectedUser);
+            sideViewApplication.start(new Stage());
+            closeLoginWindow();
+        } catch (Exception e) {
+            logger.debug(e);
+            throw new RuntimeException(e);
+
+        }
+    }
+
+    private void openChatWindow(User user) {
         try {
             if (connectedUser != null && connectedUser.isLoggedIn()) {
-                ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, contact+"@bubbles.elrant.team");
+                ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, user.getUsername());
                 chatViewApplication.start(new Stage());
-                closeLoginWindow();
             }
         } catch (Exception e) {
             logger.error("Error opening chat window: {}", e.getMessage());
