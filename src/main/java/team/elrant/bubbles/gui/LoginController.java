@@ -94,11 +94,11 @@ public class LoginController {
             logger.warn("Failed to load user information from file.");
         }
         password_field_hidden.setOnKeyPressed(event ->{
-            if(event.getCode() == KeyCode.ENTER) //when Enter is pressed, call sendMessage
+            if(event.getCode() == KeyCode.ENTER) //when Enter is pressed, call onSubmitButton
                 onSubmitButtonClick();
         });
         password_field_visible.setOnKeyPressed(event ->{
-            if(event.getCode() == KeyCode.ENTER) //when Enter is pressed, call sendMessage
+            if(event.getCode() == KeyCode.ENTER) //when Enter is pressed, call onSubmitButton
                 onSubmitButtonClick();
         });
     }
