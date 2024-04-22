@@ -101,6 +101,10 @@ public class LoginController {
             if(event.getCode() == KeyCode.ENTER) //when Enter is pressed, call onSubmitButton
                 onSubmitButtonClick();
         });
+        username_field.setOnKeyPressed(event ->{
+            if(event.getCode() == KeyCode.ENTER) //when Enter is pressed, call onSubmitButton
+                onSubmitButtonClick();
+        });
     }
 
     /**
