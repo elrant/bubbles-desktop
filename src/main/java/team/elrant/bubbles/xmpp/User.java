@@ -24,7 +24,6 @@ public class User implements Serializable {
      * @param username    The username of the user.
      * @param serviceName The service name of the XMPP server.
      */
-
     public User(@NotNull String username, @NotNull String serviceName) {
         this.username = username;
         this.serviceName = serviceName;
@@ -38,8 +37,7 @@ public class User implements Serializable {
      * @throws ClassNotFoundException If the class of a serialized object cannot be found.
      */
     public User(@NotNull String filename) throws IOException, ClassNotFoundException {
-        try (FileInputStream fileIn = new FileInputStream(filename);
-             ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
+        try (FileInputStream fileIn = new FileInputStream(filename); ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
             User serializedUser = (User) objectIn.readObject();
             logger.info("User information loaded from {}", filename);
             this.username = serializedUser.getUsername();
@@ -66,10 +64,5 @@ public class User implements Serializable {
      */
     public @NotNull String getServiceName() {
         return serviceName;
-    }
-
-    public String getProfilePictureUrl() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getProfilePictureUrl'");
     }
 }

@@ -1,6 +1,5 @@
 package team.elrant.bubbles.xmpp;
 
-import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,12 +11,10 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.roster.Roster;
-import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.EntityBareJid;
-import org.jxmpp.jid.impl.JidCreate;
 
 import java.io.*;
 import java.util.function.Consumer;
@@ -28,8 +25,8 @@ import java.util.function.Consumer;
  */
 public class ConnectedUser extends User {
     private static final Logger logger = LogManager.getLogger(ConnectedUser.class);
-    private final @Nullable String password;
     private static @Nullable Roster roster;
+    private final @NotNull String password;
     private @Nullable XMPPTCPConnection connection;
     private @Nullable ChatManager chatManager;
 
@@ -50,14 +47,12 @@ public class ConnectedUser extends User {
      * Load a new Connected user from a file.
      *
      * @param filename the filename
-     *
      * @throws IOException            the io exception
-     * @throws ClassNotFoundException the class not found exception
+     * @throws ClassNotFoundException the class notfound exception
      */
     public ConnectedUser(@NotNull String filename) throws IOException, ClassNotFoundException {
         super("uninit", "uninit"); //initialize after read file
-        try (FileInputStream fileIn = new FileInputStream(filename);
-             ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
+        try (FileInputStream fileIn = new FileInputStream(filename); ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
             ConnectedUser serializedUser = (ConnectedUser) objectIn.readObject();
             logger.info("User information loaded from {}", filename);
             super.username = serializedUser.getUsername();
@@ -66,6 +61,20 @@ public class ConnectedUser extends User {
         } catch (IOException | ClassNotFoundException e) {
             logger.error("Error loading user information from file: {}", e.getMessage());
             throw e;
+        }
+    }
+
+    /**
+     * Retrieves the roster of the connected user.
+     *
+     * @return The roster of the connected user.
+     * @throws IllegalStateException if the roster is not initialized.
+     */
+    public static @NotNull Roster getRoster() {
+        if (roster != null) {
+            return roster;
+        } else {
+            throw new IllegalStateException("Roster is not initialized.");
         }
     }
 
@@ -80,11 +89,7 @@ public class ConnectedUser extends User {
      * @throws IOException          If an I/O error occurs.
      */
     public void initializeConnection() throws SmackException, InterruptedException, XMPPException, IOException {
-        @NotNull XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-                .setUsernameAndPassword(super.getUsername(), password)
-                .setXmppDomain(super.getServiceName())
-                .setSecurityMode(ConnectionConfiguration.SecurityMode.required)
-                .build();
+        @NotNull XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder().setUsernameAndPassword(super.getUsername(), password).setXmppDomain(super.getServiceName()).setSecurityMode(ConnectionConfiguration.SecurityMode.required).build();
 
         connection = new XMPPTCPConnection(config);
         connection.connect();
@@ -94,41 +99,6 @@ public class ConnectedUser extends User {
 
         roster = Roster.getInstanceFor(connection);
         roster.reloadAndWait();
-    }
-
-    /**
-     * Adds a contact to the user's roster.
-     *
-     * @param contactJid The JID of the contact to add (user@service.name).
-     * @param nickname   The user-defined nickname of the contact, defaults to the contact's username.
-     */
-    public void addContact(@NotNull BareJid contactJid, @Nullable String nickname) {
-        try {
-            if (roster != null && !roster.contains(contactJid)) {
-                roster.createItemAndRequestSubscription(contactJid, nickname, null);
-            }
-        } catch (Exception e) {
-            logger.error("Error adding contact: {}", e.getMessage());
-        }
-    }
-
-
-    /**
-     * Removes a contact from the user's roster.
-     *
-     * @param contactJid The JID of the contact to remove (user@service.name).
-     */
-    public void removeContact(@NotNull String contactJid) {
-        try {
-            if (roster != null) {
-                RosterEntry entry = roster.getEntry(JidCreate.entityBareFrom(contactJid));
-                if (entry != null) {
-                    roster.removeEntry(entry);
-                }
-            }
-        } catch (Exception e) {
-            logger.error("Error removing contact: {}", e.getMessage());
-        }
     }
 
     /**
@@ -149,35 +119,18 @@ public class ConnectedUser extends User {
     }
 
     /**
-     * Accepts a subscription request from a contact.
-     *
-     * @param contactJid The JID of the contact to accept the subscription from (user@service.name).
-     * @param nickname   The user-defined nickname of the contact, defaults to the contact's username.
-     */
-    public void acceptSubscription(@NotNull BareJid contactJid, @Nullable String nickname) {
-        if (nickname == null || nickname.isEmpty()) {
-            nickname = contactJid.toString().split("@")[0];
-        }
-        try {
-            if (roster != null) {
-                roster.createItemAndRequestSubscription(JidCreate.bareFrom(contactJid), nickname, null);
-            }
-        } catch (Exception e) {
-            logger.error("Error accepting subscription: {}", e.getMessage());
-        }
-    }
-
-    /**
      * Saves the user information (excluding password) to a file.
      *
-     * @param filename The name of the file to save the user information to.
+     * @param filename     The name of the file to save the user information to.
+     * @param savePassword Flag indicating whether to save the password in the file.
      */
     public void saveUserToFile(@NotNull String filename, boolean savePassword) {
         File file = new File("user.dat");
-        file.delete();
+        if (file.delete()) {
+            logger.info("Old user information file deleted");
+        }
 
-        try (@NotNull FileOutputStream fileOut = new FileOutputStream(filename);
-             @NotNull ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+        try (@NotNull FileOutputStream fileOut = new FileOutputStream(filename); @NotNull ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
 
             if (savePassword)
                 objectOut.writeObject(new ConnectedUser(this.getUsername(), this.getPassword(), this.getServiceName()));
@@ -192,21 +145,7 @@ public class ConnectedUser extends User {
         }
     }
 
-    /**
-     * Retrieves the roster of the connected user.
-     *
-     * @return The roster of the connected user.
-     * @throws IllegalStateException if the roster is not initialized.
-     */
-    public static @NotNull Roster getRoster() {
-        if (roster != null) {
-            return roster;
-        } else {
-            throw new IllegalStateException("Roster is not initialized.");
-        }
-    }
-
-    private String getPassword (){
+    private @NotNull String getPassword() {
         return password;
     }
 
@@ -216,7 +155,7 @@ public class ConnectedUser extends User {
      *
      * @param pwField the fxml password field
      */
-    public void setPasswordField (PasswordField pwField) {
+    public void setPasswordField(PasswordField pwField) {
         pwField.setText(this.getPassword());
     }
 
@@ -226,10 +165,7 @@ public class ConnectedUser extends User {
      * @return true if the password in uninitialized, false if it isn't
      */
     public boolean passwordUnInit() {
-        if (this.getPassword().equals("uninit"))
-            return true;
-        else
-            return false;
+        return this.getPassword().equals("uninit");
     }
 
     /**
@@ -246,16 +182,10 @@ public class ConnectedUser extends User {
     }
 
     /**
-     * Disconnects the user from the XMPP server.
-     */
-    public void disconnect() {
-        if (connection != null) {
-            connection.disconnect();
-        }
-    }
-
-    /**
      * Adds an incoming message listener to the chat manager.
+     *
+     * @param contactJid        The JID of the contact for which to add the listener.
+     * @param updateChatDisplay The consumer to handle incoming messages.
      */
     public void addIncomingMessageListener(BareJid contactJid, Consumer<String> updateChatDisplay) {
         if (chatManager != null) {

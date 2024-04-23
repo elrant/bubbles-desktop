@@ -10,20 +10,32 @@ import org.jxmpp.jid.EntityBareJid;
 
 import java.util.function.Consumer;
 
+/**
+ * The ChatListener class implements an incoming chat message listener.
+ * It is responsible for processing incoming chat messages and updating the chat display accordingly.
+ */
 public class ChatListener implements IncomingChatMessageListener {
     private static final Logger logger = LogManager.getLogger(ChatListener.class);
-    public BareJid contactJid;
-    Consumer<String> updateChatDisplay;
+    private final BareJid contactJid;
+    private final Consumer<String> updateChatDisplay;
 
-    public ChatListener(BareJid contactJid, Consumer<String> updateChatDisplay){
+    /**
+     * Constructs a ChatListener with the specified contact JID and chat display updater.
+     *
+     * @param contactJid        The JID of the contact with whom the chat is being conducted.
+     * @param updateChatDisplay A consumer function to update the chat display with incoming messages.
+     */
+    public ChatListener(BareJid contactJid, Consumer<String> updateChatDisplay) {
         this.contactJid = contactJid;
         this.updateChatDisplay = updateChatDisplay;
     }
 
     /**
-     * @param from The JID of the sender
-     * @param message The message contents
-     * @param chat The chat channel
+     * Processes incoming chat messages and updates the chat display if they are from the specified contact.
+     *
+     * @param from    The JID of the sender.
+     * @param message The contents of the incoming message.
+     * @param chat    The chat channel.
      */
     @Override
     public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {

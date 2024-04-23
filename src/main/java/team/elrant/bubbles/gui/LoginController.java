@@ -8,9 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import team.elrant.bubbles.xmpp.ConnectedUser;
-import team.elrant.bubbles.xmpp.User;
-
-import java.util.Set;
 
 public class LoginController {
     private static final Logger logger = LogManager.getLogger(LoginController.class);
@@ -33,8 +30,10 @@ public class LoginController {
     private CheckBox seePasswordCheckbox;
     private @Nullable ConnectedUser connectedUser;
 
-    final String contact = "testuser";
-
+    /**
+     * Handles the submit button click event.
+     * Attempts to log in the user and open the main application view if successful.
+     */
     @FXML
     protected void onSubmitButtonClick() {
         try {
@@ -54,6 +53,10 @@ public class LoginController {
         }
     }
 
+    /**
+     * Handles the see password checkbox click event.
+     * Toggles the visibility of the password fields.
+     */
     @FXML
     protected void onSeePasswordCheckBoxClick() {
         if (seePasswordCheckbox.isSelected()) {
@@ -67,6 +70,10 @@ public class LoginController {
         }
     }
 
+    /**
+     * Initializes the login view.
+     * Loads user information from file if available and sets event handlers.
+     */
     @FXML
     public void initialize() {
         try {
@@ -95,11 +102,17 @@ public class LoginController {
         });
     }
 
+    /**
+     * Closes the login window.
+     */
     private void closeLoginWindow() {
         Stage stage = (Stage) submitButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Opens the main application view (SideView).
+     */
     private void openSideView() {
         try {
             SideViewApplication sideViewApplication = new SideViewApplication(connectedUser);
@@ -109,17 +122,6 @@ public class LoginController {
             logger.debug(e);
             throw new RuntimeException(e);
 
-        }
-    }
-
-    private void openChatWindow(User user) {
-        try {
-            if (connectedUser != null && connectedUser.isLoggedIn()) {
-                ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, user.getUsername());
-                chatViewApplication.start(new Stage());
-            }
-        } catch (Exception e) {
-            logger.error("Error opening chat window: {}", e.getMessage());
         }
     }
 }

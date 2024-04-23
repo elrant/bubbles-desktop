@@ -8,11 +8,10 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jxmpp.jid.BareJid;
+import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
 import team.elrant.bubbles.xmpp.ConnectedUser;
 
-import java.io.File;
 import java.util.Objects;
 
 /**
@@ -55,21 +54,23 @@ public class ChatViewApplication extends Application {
     @Override
     public void start(@NotNull Stage stage) throws Exception {
         try {
-            @NotNull FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("views/ChatView.fxml"));
+            if (contactJid.isEmpty()) {
+                throw new IllegalArgumentException("Contact JID is empty.");
+            }
+
+            logger.debug("Contact JID before parsing: {}", contactJid);
+
+            EntityBareJid bareContactJid = JidCreate.entityBareFrom(contactJid);
+
+            logger.debug("Parsed bare contact JID: {}", bareContactJid);
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("views/ChatView.fxml"));
 
             // Set custom controller factory
-            fxmlLoader.setControllerFactory(param -> {
-                try {
-                    // Instantiate the controller with the required properties
-                    BareJid bareContactJid = JidCreate.bareFrom(contactJid);
-                    return new ChatViewController(connectedUser, bareContactJid);
-                } catch (Exception e) {
-                    logger.error("Error creating ChatViewController: {}", e.getMessage());
-                    throw new RuntimeException(e);
-                }
-            });
+            fxmlLoader.setControllerFactory(param -> new ChatViewController(connectedUser, bareContactJid));
+
             AnchorPane root = fxmlLoader.load();
-            @NotNull Scene scene = new Scene(root, 800, 700);
+            Scene scene = new Scene(root, 800, 700);
             scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styling/fluent-light.css")).toExternalForm());
             stage.setTitle("Chat");
             stage.setScene(scene);
@@ -79,10 +80,9 @@ public class ChatViewApplication extends Application {
             stage.setOnCloseRequest(windowEvent -> {
                 try {
                     ChatViewController chatViewController = fxmlLoader.getController();
-                    chatViewController.saveMessage();
-                }
-                catch (Exception e){
-                    logger.error("Error: {}",e.getMessage());
+                    chatViewController.saveToFile();
+                } catch (Exception e) {
+                    logger.error("Error: {}", e.getMessage());
                 }
             });
         } catch (Exception e) {
@@ -90,4 +90,5 @@ public class ChatViewApplication extends Application {
             throw e;
         }
     }
+
 }

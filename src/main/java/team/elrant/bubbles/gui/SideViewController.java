@@ -2,11 +2,11 @@ package team.elrant.bubbles.gui;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import team.elrant.bubbles.xmpp.ConnectedUser;
@@ -14,12 +14,9 @@ import team.elrant.bubbles.xmpp.User;
 
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
- * The SideViewController class controls the login functionality in the GUI.
- * It handles ...
+ * The SideViewController class controls the user list functionality in the GUI.
+ * It handles displaying the list of online users and opening chat windows.
  */
 public class SideViewController {
     private static final Logger logger = LogManager.getLogger(SideViewController.class);
@@ -27,15 +24,23 @@ public class SideViewController {
     private VBox userList;
     private ConnectedUser connectedUser;
 
-    // Add setter for connectedUser
+    /**
+     * Sets the connected user for the side view controller.
+     *
+     * @param connectedUser The connected user to set.
+     */
     public void setConnectedUser(ConnectedUser connectedUser) {
         this.connectedUser = connectedUser;
     }
 
+    /**
+     * Initializes the user list view.
+     * Populates the list with online users and adds event handlers to open chat windows.
+     */
     @FXML
     public void initialize() {
         Roster roster = ConnectedUser.getRoster();
-        Set <RosterEntry> rosterEntries = roster.getEntries();
+        Set<RosterEntry> rosterEntries = roster.getEntries();
         for (RosterEntry entry : rosterEntries) {
             String jid = entry.getJid().toString();
             String[] parts = jid.split("@");
@@ -47,23 +52,24 @@ public class SideViewController {
 
             // Create UI components
             HBox userItem = new HBox();
-            // ImageView profilePic = new ImageView(new Image(user.getProfilePictureUrl()));
-            // profilePic.setFitHeight(50);
-            // profilePic.setFitWidth(50);
             Label userName = new Label(user.getUsername());
 
             // Add event handler to open ChatPage
-            userName.setOnMouseClicked(event -> openChatPage(username));
+            userName.setOnMouseClicked(event -> openChatPage(jid));
 
             userItem.getChildren().addAll(userName);
             userList.getChildren().add(userItem);
         }
     }
 
-    // Method to open ChatPage
-    private void openChatPage(String username) {
+    /**
+     * Opens a chat window for the selected user.
+     *
+     * @param jid The JID of the user to open a chat window for.
+     */
+    private void openChatPage(String jid) {
         try {
-            ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, username);
+            ChatViewApplication chatViewApplication = new ChatViewApplication(connectedUser, jid);
             chatViewApplication.start(new Stage());
         } catch (Exception e) {
             logger.error("Error opening chat window: {}", e.getMessage());
