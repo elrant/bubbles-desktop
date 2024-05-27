@@ -28,6 +28,8 @@ public class LoginController {
     private CheckBox rememberPassword;
     @FXML
     private CheckBox seePasswordCheckbox;
+    @FXML
+    private TextField service_field;
     private @Nullable ConnectedUser connectedUser;
 
     /**
@@ -38,9 +40,9 @@ public class LoginController {
     protected void onSubmitButtonClick() {
         try {
             if (seePasswordCheckbox.isSelected())
-                connectedUser = new ConnectedUser(username_field.getText(), password_field_visible.getText(), "bubbles.elrant.team");
+                connectedUser = new ConnectedUser(username_field.getText(), password_field_visible.getText(), service_field.getText());
             else
-                connectedUser = new ConnectedUser(username_field.getText(), password_field_hidden.getText(), "bubbles.elrant.team");
+                connectedUser = new ConnectedUser(username_field.getText(), password_field_hidden.getText(), service_field.getText());
             connectedUser.initializeConnection();
             connectedUser.saveUserToFile("user.dat", rememberPassword.isSelected());
         } catch (Exception e) {
